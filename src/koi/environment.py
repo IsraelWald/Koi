@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Dict, Optional
 
 from .token import Token
-from .lox_runtime_error import LoxRuntimeError
+from .koi_runtime_error import KoiRuntimeError
 
 
 class Environment:
@@ -36,7 +36,7 @@ class Environment:
         if self.parent:
             self.parent.get(name)
 
-        raise LoxRuntimeError(name, f"Undefined name {name.lexeme!r}")
+        raise KoiRuntimeError(name, f"Undefined name {name.lexeme!r}")
 
     def assign(self, name: Token, value: Any) -> None:
         """Assign a new value to an existing variable.
@@ -49,7 +49,7 @@ class Environment:
         if self.parent:
             self.parent.assign(name, value)
             return
-        raise LoxRuntimeError(name, f"Undefined name {name.lexeme!r}")
+        raise KoiRuntimeError(name, f"Undefined name {name.lexeme!r}")
 
     def assign_at(self, distance: int, name: Token, value: Any) -> None:
         self._ancestor(distance=distance).values[name.lexeme] = value
