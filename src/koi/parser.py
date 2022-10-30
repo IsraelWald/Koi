@@ -1,14 +1,34 @@
 from typing import List
 
+# https://www.craftinginterpreters.com/parsing-expressions.html#syntax-errors
 from .expr import Binary, Grouping, Literal, Unary
+from .stmt import Stmt
 from .token_type import TokenType
 from .token import Token
 
 
+class ParseError(Exception):
+    def __init__(self, token: Token, message: str):
+        self.token = token
+        self.message = message
+        super().__init__(self.message)
+
+
 class Parser:
-    def __init__(self, tokens: List[Token]):
+    def __init__(self, tokens: List[Token], on_error=None):
         self.tokens = tokens
         self.current = 0
+        self.on_error = on_error
+
+    def parse(self) -> List[Stmt]:
+        try:
+            return self._expression()
+        except ParseError:
+            self._synchronize()
+            return None
+
+    def _expression(self):
+        return self.equality()
 
     def equality(self):
         expr = self.comparison()
@@ -72,14 +92,16 @@ class Parser:
         elif self.match(TokenType.NUMBER, TokenType.STRING):
             return Literal(self.previous().literal)
         elif self.match(TokenType.LEFT_PAREN):
-            expr = self.expression()
+            expr = self.equality()
             self.consume(TokenType.RIGHT_PAREN, "Expected ')' after expression")
             return Grouping(expr)
 
-    def consume(self, tok_type, message):
+        raise self._error(self.peek(), "Expected Expression")
+
+    def consume(self, tok_type: TokenType, message: str):
         if self.check(tok_type):
             return self.advance()
-        raise self.error(self.peek(), message)
+        raise self._error(self.peek(), message)
 
     def match(self, *token_types: List[TokenType]):
         for token_type in token_types:
@@ -98,11 +120,26 @@ class Parser:
             self.current += 1
         return self.previous()
 
-    def is_at_end(self):
+    def is_at_end(self) -> bool:
         return self.peek().tok_type == TokenType.EOF
 
     def peek(self) -> Token:
         return self.tokens[self.current]
 
-    def previous(self):
+    def previous(self) -> Token:
         return self.tokens[self.current - 1]
+
+    def _error(self, token: Token, message: str):
+        self.on_error(token, message)
+        raise ParseError(token, message)
+
+    def _synchronize(self):
+        self.advance()
+
+        while not self.is_at_end():
+            if self.previous().tok_type == TokenType.SEMICOLON:
+                return
+            match self.peek().tok_type:
+                case TokenType.CLASS | TokenType.FUNC | TokenType.VAR | TokenType.FOR | TokenType.IF | TokenType.WHILE | TokenType.PRINT | TokenType.RETURN:
+                    return
+            self.advance()
