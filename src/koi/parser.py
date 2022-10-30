@@ -41,17 +41,17 @@ class Parser:
             op = self.previous()
             right = self.factor()
             expr = Binary(expr, op, right)
-        
+
         return expr
 
     def factor(self):
         expr = self.unary()
 
-        while (self.match(TokenType.SLASH, TokenType.STAR)):
+        while self.match(TokenType.SLASH, TokenType.STAR):
             op = self.previous()
             right = self.unary()
             expr = Binary(expr, op, right)
-        
+
         return expr
 
     def unary(self):

@@ -1,24 +1,25 @@
 from __future__ import annotations
 
 from typing import Any, Dict, Optional
+from typing_extensions import Self
 
 from .token import Token
 from .koi_runtime_error import KoiRuntimeError
 
 
 class Environment:
-    def __init__(self, parent: Optional[Environment]) -> None:
+    def __init__(self, parent: Optional[Self]) -> None:
         self.values: Dict[str, Any] = dict()
         self.parent = parent
 
     def define(self, name: str, value: Any) -> None:
         self.values[name] = value
 
-    def _ancestor(self, distance: int) -> Environment:
-        environment = self
+    def _ancestor(self, distance: int) -> Self:
+        environment: Self = self
 
-        for i in range(distance):
-            environment = environment.parent
+        for _ in range(distance):
+            environment = environment.parent  # type: ignore
 
         return environment
 

@@ -68,7 +68,7 @@ class Scanner:
 
         # Unterminated string
         if self._is_at_end():
-            self.on_error(self.line, "Unterminated string")
+            self.on_error(self.line, "Unterminated string")  # type: ignore
             return
 
         # Advance past the "
@@ -165,7 +165,7 @@ class Scanner:
                     # A letter, make an identifier
                     self._identifier()
                 elif self.on_error:
-                    self.on_error(self.line, f"Unexpected char {c}")
+                    self.on_error(self.line, f"Unexpected char {c}")  # type: ignore
                 else:
                     raise
 
