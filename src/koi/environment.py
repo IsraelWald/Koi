@@ -29,7 +29,7 @@ class Environment:
 
     def get(self, name: Token) -> Any:
         try:
-            return self.values[name]
+            return self.values[name.lexeme]
         except KeyError:
             # Ignore this and try to get from an ancestor
             pass
