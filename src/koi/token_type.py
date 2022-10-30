@@ -1,5 +1,4 @@
 import enum
-from typing_extensions import Self
 
 
 class TokenType(enum.Enum):
@@ -9,47 +8,47 @@ class TokenType(enum.Enum):
     """
 
     # Single char tokens
-    LEFT_PAREN: Self
-    RIGHT_PAREN: Self
-    LEFT_BRACE: Self
-    RIGHT_BRACE: Self
-    COMMA: Self
-    DOT: Self
-    MINUS: Self
-    PLUS: Self
-    SEMICOLON: Self
-    SLASH: Self
-    STAR: Self
+    LEFT_PAREN = enum.auto()
+    RIGHT_PAREN = enum.auto()
+    LEFT_BRACE = enum.auto()
+    RIGHT_BRACE = enum.auto()
+    COMMA = enum.auto()
+    DOT = enum.auto()
+    MINUS = enum.auto()
+    PLUS = enum.auto()
+    SEMICOLON = enum.auto()
+    SLASH = enum.auto()
+    STAR = enum.auto()
     # One or two char tokens
-    BANG: Self
-    BANG_EQUAL: Self
-    EQUAL: Self
-    EQUAL_EQUAL: Self
-    GREATER: Self
-    GREATER_EQUAL: Self
-    LESS: Self
-    LESS_EQUAL: Self
+    BANG = enum.auto()
+    BANG_EQUAL = enum.auto()
+    EQUAL = enum.auto()
+    EQUAL_EQUAL = enum.auto()
+    GREATER = enum.auto()
+    GREATER_EQUAL = enum.auto()
+    LESS = enum.auto()
+    LESS_EQUAL = enum.auto()
     # Literals
-    IDENTIFIER: Self
-    STRING: Self
-    NUMBER: Self
+    IDENTIFIER = enum.auto()
+    STRING = enum.auto()
+    NUMBER = enum.auto()
     # Keywords
-    AND: Self
-    OR: Self
-    NOT: Self
-    IF: Self
-    ELSE: Self
-    CLASS: Self
-    TRUE: Self
-    FALSE: Self
-    NIL: Self
-    FUNC: Self
-    FOR: Self
-    WHILE: Self
-    PRINT: Self
-    RETURN: Self
-    SUPER: Self
-    THIS: Self
-    VAR: Self
+    AND = enum.auto()
+    OR = enum.auto()
+    NOT = enum.auto()
+    IF = enum.auto()
+    ELSE = enum.auto()
+    CLASS = enum.auto()
+    TRUE = enum.auto()
+    FALSE = enum.auto()
+    NIL = enum.auto()
+    FUNC = enum.auto()
+    FOR = enum.auto()
+    WHILE = enum.auto()
+    PRINT = enum.auto()
+    RETURN = enum.auto()
+    SUPER = enum.auto()
+    THIS = enum.auto()
+    VAR = enum.auto()
 
-    EOF: Self
+    EOF = enum.auto()
