@@ -1,3 +1,3 @@
-from .lox.scanner import Scanner
-from .lox.token_type import TokenType
-from .lox.token import Token
+from .koi.scanner import Scanner
+from .koi.token_type import TokenType
+from .koi.token import Token
