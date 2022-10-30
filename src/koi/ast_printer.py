@@ -35,7 +35,7 @@ class AstPrinter(ExprVisitor):
     def visit_literal_expr(self, expr: Literal):
         if expr.value is None:
             return "nil"
-        return str(expr.value)
+        return f"{expr.value!r}"
 
     def visit_logical_expr(self, expr: Logical):
         raise NotImplementedError
