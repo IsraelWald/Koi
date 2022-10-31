@@ -2,9 +2,10 @@ from typing import List
 
 # https://www.craftinginterpreters.com/parsing-expressions.html#syntax-errors
 from .expr import Binary, Grouping, Literal, Unary
-from .stmt import Stmt
+from .stmt import Expression, Stmt
 from .token_type import TokenType
 from .token import Token
+from .stmt import Print
 
 
 class ParseError(Exception):
@@ -21,11 +22,25 @@ class Parser:
         self.on_error = on_error
 
     def parse(self) -> List[Stmt]:
-        try:
-            return self._expression()
-        except ParseError:
-            self._synchronize()
-            return None
+        statements: List[Stmt] = []
+        while not self.is_at_end():
+            statements.append(self._statement())
+        return statements
+
+    def _statement(self) -> Stmt:
+        if self.match(TokenType.PRINT):
+            return self._print_statement()
+        return self._expression_statement()
+
+    def _print_statement(self) -> Stmt:
+        value = self._expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' after value")
+        return Print(value)
+
+    def _expression_statement(self) -> Stmt:
+        expr = self._expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' after value")
+        return Expression(expr)
 
     def _expression(self):
         return self.equality()
@@ -67,7 +82,7 @@ class Parser:
     def factor(self):
         expr = self.unary()
 
-        while self.match(TokenType.SLASH, TokenType.STAR):
+        while self.match(TokenType.SLASH, TokenType.STAR, TokenType.MOD):
             op = self.previous()
             right = self.unary()
             expr = Binary(expr, op, right)

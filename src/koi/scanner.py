@@ -129,6 +129,8 @@ class Scanner:
                 self._add_token(TokenType.SEMICOLON)
             case "*":
                 self._add_token(TokenType.STAR)
+            case "%":
+                self._add_token(TokenType.MOD)
             case "!":
                 self._add_token(
                     TokenType.BANG_EQUAL if self._match("=") else TokenType.BANG

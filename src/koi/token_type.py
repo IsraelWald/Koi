@@ -19,6 +19,7 @@ class TokenType(enum.Enum):
     SEMICOLON = enum.auto()
     SLASH = enum.auto()
     STAR = enum.auto()
+    MOD = enum.auto()
     # One or two char tokens
     BANG = enum.auto()
     BANG_EQUAL = enum.auto()
