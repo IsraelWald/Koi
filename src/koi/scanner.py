@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List
+from typing import Any, List
 
 from .token import Token
 from .token_type import TokenType
@@ -91,10 +91,10 @@ class Scanner:
                 self._advance()
 
         number_value = self.source[self.start : self.current]
-        self._add_token(TokenType.NUMBER, number_value)
+        self._add_token(TokenType.NUMBER, float(number_value))
 
     def _identifier(self):
-        while self._peek().isalnum() or self._peek == "_":
+        while self._peek().isalnum() or self._peek() == "_":
             self._advance()
 
         # Check if identifier is a keyword
