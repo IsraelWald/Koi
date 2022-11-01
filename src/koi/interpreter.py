@@ -1,3 +1,4 @@
+from .environment import Environment
 from .expr import (
     Assign,
     ExprVisitor,
@@ -34,6 +35,8 @@ from typing import List
 
 
 class Interpreter(ExprVisitor, StmtVisitor):
+    def __init__(self) -> None:
+        self.env = Environment()
     def interpret(self, statements: List[Stmt]):
         try:
             for stmt in statements:

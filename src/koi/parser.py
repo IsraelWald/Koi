@@ -1,8 +1,8 @@
 from typing import List
 
 # https://www.craftinginterpreters.com/parsing-expressions.html#syntax-errors
-from .expr import Binary, Grouping, Literal, Unary
-from .stmt import Expression, Stmt
+from .expr import Binary, Grouping, Literal, Unary, Expr, Variable
+from .stmt import Expression, Stmt, Var
 from .token_type import TokenType
 from .token import Token
 from .stmt import Print
@@ -38,9 +38,12 @@ class Parser:
 
     def _var_declaration(self) -> Stmt:
         name: Token = self.consume(TokenType.IDENTIFIER, "Expected identifier")
-        initiliazer: Expr | None = None
+        init_val: Expr | None = None
         if self.match(TokenType.EQUAL):
-            initiliazer = self.expression()
+            init_val = self._expression()
+        self.consume(TokenType.SEMICOLON, "Expected ';' after variable declaration.")
+        return Var(name, init_val)
+        
 
 
     def _statement(self) -> Stmt:
@@ -120,6 +123,8 @@ class Parser:
             return Literal(True)
         elif self.match(TokenType.NIL):
             return Literal(None)
+        elif self.match(TokenType.IDENTIFIER):
+            return Variable(self.previous())
         elif self.match(TokenType.NUMBER, TokenType.STRING):
             return Literal(self.previous().literal)
         elif self.match(TokenType.LEFT_PAREN):
