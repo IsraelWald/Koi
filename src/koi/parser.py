@@ -24,8 +24,24 @@ class Parser:
     def parse(self) -> List[Stmt]:
         statements: List[Stmt] = []
         while not self.is_at_end():
-            statements.append(self._statement())
+            statements.append(self._declaration())
         return statements
+
+    def _declaration(self) -> Stmt:
+        try:
+            if self.match(TokenType.VAR):
+                return self._var_declaration()
+            return self._statement()
+        except ParseError:
+            self._synchronize()
+            return None
+
+    def _var_declaration(self) -> Stmt:
+        name: Token = self.consume(TokenType.IDENTIFIER, "Expected identifier")
+        initiliazer: Expr | None = None
+        if self.match(TokenType.EQUAL):
+            initiliazer = self.expression()
+
 
     def _statement(self) -> Stmt:
         if self.match(TokenType.PRINT):
