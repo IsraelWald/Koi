@@ -1,8 +1,8 @@
 from typing import List
 
 # https://www.craftinginterpreters.com/parsing-expressions.html#syntax-errors
-from .expr import Binary, Grouping, Literal, Unary, Expr, Variable
-from .stmt import Expression, Stmt, Var
+from .expr import Binary, Grouping, Literal, Unary, Expr, Variable, Assign
+from .stmt import Expression, Stmt, Var, Block
 from .token_type import TokenType
 from .token import Token
 from .stmt import Print
@@ -49,7 +49,17 @@ class Parser:
     def _statement(self) -> Stmt:
         if self.match(TokenType.PRINT):
             return self._print_statement()
+        if self.match(TokenType.LEFT_BRACE):
+            return Block(self._block())
         return self._expression_statement()
+
+    def _block(self) -> List[Stmt]:
+        statements: List[Stmt] = []
+
+        while (not self.check(TokenType.RIGHT_BRACE) and not self.is_at_end()):
+            statements.append(self._declaration())
+        self.consume(TokenType.RIGHT_BRACE, "Expect '}' after block")
+        return statements
 
     def _print_statement(self) -> Stmt:
         value = self._expression()
@@ -62,9 +72,22 @@ class Parser:
         return Expression(expr)
 
     def _expression(self):
-        return self.equality()
+        return self._assignment()
 
-    def equality(self):
+    def _assignment(self):
+        expr = self._equality()
+
+        if self.match(TokenType.EQUAL):
+            equals = self.previous()
+            value = self._assignment()
+
+            if isinstance(expr, Variable):
+                name = expr.name
+                return Assign(name, value)
+            self._error(equals, "Invalid assignment target")
+        return expr
+
+    def _equality(self):
         expr = self.comparison()
 
         while self.match(TokenType.BANG, TokenType.BANG_EQUAL):
@@ -128,7 +151,7 @@ class Parser:
         elif self.match(TokenType.NUMBER, TokenType.STRING):
             return Literal(self.previous().literal)
         elif self.match(TokenType.LEFT_PAREN):
-            expr = self.equality()
+            expr = self._equality()
             self.consume(TokenType.RIGHT_PAREN, "Expected ')' after expression")
             return Grouping(expr)
 

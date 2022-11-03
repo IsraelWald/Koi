@@ -37,15 +37,22 @@ from typing import List
 class Interpreter(ExprVisitor, StmtVisitor):
     def __init__(self) -> None:
         self.env = Environment()
+    
     def interpret(self, statements: List[Stmt]):
         try:
             for stmt in statements:
                 self._execute(stmt)
         except KoiRuntimeError as error:
             print(error)
+            raise SystemExit
 
     def _execute(self, statement: Stmt):
-        return statement.accept(self)
+        try:
+            return statement.accept(self)
+        except KoiRuntimeError as error:
+            print(error)
+        except Exception as e:
+            raise SystemExit
 
     def _stringify(self, value):
         if value is None:
@@ -153,16 +160,32 @@ class Interpreter(ExprVisitor, StmtVisitor):
         raise KoiRuntimeError(operator, "Operands must be numbers")
 
     def visit_assign_expr(self, expr: Assign):
-        return super().visit_assign_expr(expr)
+        value = self._evaluate(expr.value)
+        self.env.assign(expr.name, value)
+        return value
 
     def visit_block_stmt(self, stmt: Block):
-        return super().visit_block_stmt(stmt)
+        self._exec_block(stmt.statements, Environment(self.env))
+        return None
+
+    def _exec_block(self, statements: List[Stmt], env: Environment):
+        previous: Environment = self.env
+        try:
+            self.env = env
+            for stmt in statements:
+                self._execute(stmt)
+        finally:
+            self.env = previous
 
     def visit_call_expr(self, expr: Call):
         return super().visit_call_expr(expr)
 
     def visit_var_stmt(self, stmt: Var):
-        return super().visit_var_stmt(stmt)
+        value = None
+        if stmt.initializer != None:
+            value = self._evaluate(stmt.initializer)
+        self.env.define(stmt.name.lexeme, value)
+        return None
 
     def visit_class_stmt(self, stmt: Class):
         return super().visit_class_stmt(stmt)
@@ -174,7 +197,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return super().visit_this_expr(expr)
 
     def visit_variable_expr(self, expr: Variable):
-        return super().visit_variable_expr(expr)
+        return self.env.get(expr.name)
 
     def visit_function_stmt(self, stmt: Function):
         return super().visit_function_stmt(stmt)

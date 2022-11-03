@@ -21,7 +21,9 @@ class Koi:
         parser = Parser(tokens, on_error=self.token_error)
         statements = parser.parse()
 
-        self.interpreter.interpret(statements)
+        value = self.interpreter.interpret(statements)
+        if value:
+            print(value)
 
     def runtime_error(self, error: KoiRuntimeError):
         message = f"{error.message!r} in line [line{error.token.line}]"
