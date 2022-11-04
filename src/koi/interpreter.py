@@ -125,7 +125,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return None
 
     def visit_expression_stmt(self, stmt: Expression):
-        self._evaluate(stmt.expression)
+        print(self._evaluate(stmt.expression))
         return None
 
     def visit_print_stmt(self, stmt: Print):
