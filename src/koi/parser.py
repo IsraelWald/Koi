@@ -2,7 +2,7 @@ from typing import List
 
 # https://www.craftinginterpreters.com/parsing-expressions.html#syntax-errors
 from .expr import Binary, Grouping, Literal, Unary, Expr, Variable, Assign
-from .stmt import Expression, Stmt, Var, Block
+from .stmt import Expression, Stmt, Var, Block, If
 from .token_type import TokenType
 from .token import Token
 from .stmt import Print
@@ -49,9 +49,23 @@ class Parser:
     def _statement(self) -> Stmt:
         if self.match(TokenType.PRINT):
             return self._print_statement()
+        if self.match(TokenType.IF):
+            return self._if_statement()
         if self.match(TokenType.LEFT_BRACE):
             return Block(self._block())
         return self._expression_statement()
+
+    def _if_statement(self):
+        self.consume(TokenType.LEFT_PAREN, "Expected '(' after keyword 'if'")
+        condition: Expr = self._expression()
+        self.consume(TokenType.RIGHT_PAREN, "Expected ')' after if condition")
+
+        then_branch: Expr = self._statement()
+        else_branch = None
+        if self.match(TokenType.ELSE):
+            else_branch = self._statement()
+        
+        return If(condition, then_branch, else_branch)
 
     def _block(self) -> List[Stmt]:
         statements: List[Stmt] = []
