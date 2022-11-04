@@ -37,7 +37,7 @@ from typing import List
 class Interpreter(ExprVisitor, StmtVisitor):
     def __init__(self) -> None:
         self.env = Environment()
-    
+
     def interpret(self, statements: List[Stmt]):
         try:
             for stmt in statements:
@@ -51,7 +51,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
             return statement.accept(self)
         except KoiRuntimeError as error:
             print(error)
-        except Exception as e:
+        except Exception:
             raise SystemExit
 
     def _stringify(self, value):
@@ -98,8 +98,10 @@ class Interpreter(ExprVisitor, StmtVisitor):
                         expr.operator, "Both operands must be either numbers or string"
                     )
             case TokenType.SLASH:
+                if right == 0:
+                    raise KoiRuntimeError(right, f"Cannot divide {left} by zero")
                 self._check_number_operands(expr.operator, left, right)
-                return float(left) + float(right)
+                return float(left) / float(right)
             case TokenType.STAR:
                 self._check_number_operands(expr.operator, left, right)
                 return float(left) * float(right)
@@ -182,7 +184,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
 
     def visit_var_stmt(self, stmt: Var):
         value = None
-        if stmt.initializer != None:
+        if stmt.initializer is not None:
             value = self._evaluate(stmt.initializer)
         self.env.define(stmt.name.lexeme, value)
         return None
