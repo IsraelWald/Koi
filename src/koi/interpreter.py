@@ -57,6 +57,10 @@ class Interpreter(ExprVisitor, StmtVisitor):
     def _stringify(self, value):
         if value is None:
             return "nil"
+        elif value is True:
+            return "true"
+        elif value is False:
+            return "false"
         elif isinstance(value, (float, int)):
             return str(value)
         return str(value)
@@ -125,7 +129,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return None
 
     def visit_expression_stmt(self, stmt: Expression):
-        print(self._evaluate(stmt.expression))
+        print(self._stringify(self._evaluate(stmt.expression)))
         return None
 
     def visit_print_stmt(self, stmt: Print):
@@ -137,7 +141,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return expr.accept(self)
 
     def _is_truthy(self, obj) -> bool:
-        if obj is None or obj is False:
+        if obj is None:
             return False
         elif isinstance(obj, bool):
             return bool(obj)
@@ -208,7 +212,11 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return super().visit_get_expr(expr)
 
     def visit_if_stmt(self, stmt: If):
-        return super().visit_if_stmt(stmt)
+        if self._is_truthy(self._evaluate(stmt.condition)):
+            self._execute(stmt.then_branch)
+        elif stmt.else_branch is not None:
+            self._execute(stmt.else_branch)
+        return None
 
     def visit_return_stmt(self, stmt: Return):
         return super().visit_return_stmt(stmt)
@@ -217,7 +225,14 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return super().visit_set_expr(expr)
 
     def visit_logical_expr(self, expr: Logical):
-        return super().visit_logical_expr(expr)
+        left = self._evaluate(expr.left)
+        if expr.operator.tok_type == TokenType.OR:
+            if self._is_truthy(left):
+                return left
+            else:
+                if not self._is_truthy(left):
+                    return left
+        return self._evaluate(expr.right)
 
     def visit_while_stmt(self, stmt: While):
         return super().visit_while_stmt(stmt)

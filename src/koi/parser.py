@@ -1,7 +1,7 @@
 from typing import List
 
 # https://www.craftinginterpreters.com/parsing-expressions.html#syntax-errors
-from .expr import Binary, Grouping, Literal, Unary, Expr, Variable, Assign
+from .expr import Binary, Grouping, Literal, Logical, Unary, Expr, Variable, Assign
 from .stmt import Expression, Stmt, Var, Block, If
 from .token_type import TokenType
 from .token import Token
@@ -43,8 +43,6 @@ class Parser:
             init_val = self._expression()
         self.consume(TokenType.SEMICOLON, "Expected ';' after variable declaration.")
         return Var(name, init_val)
-        
-
 
     def _statement(self) -> Stmt:
         if self.match(TokenType.PRINT):
@@ -64,13 +62,13 @@ class Parser:
         else_branch = None
         if self.match(TokenType.ELSE):
             else_branch = self._statement()
-        
+
         return If(condition, then_branch, else_branch)
 
     def _block(self) -> List[Stmt]:
         statements: List[Stmt] = []
 
-        while (not self.check(TokenType.RIGHT_BRACE) and not self.is_at_end()):
+        while not self.check(TokenType.RIGHT_BRACE) and not self.is_at_end():
             statements.append(self._declaration())
         self.consume(TokenType.RIGHT_BRACE, "Expect '}' after block")
         return statements
@@ -89,7 +87,7 @@ class Parser:
         return self._assignment()
 
     def _assignment(self):
-        expr = self._equality()
+        expr = self._or()
 
         if self.match(TokenType.EQUAL):
             equals = self.previous()
@@ -99,6 +97,26 @@ class Parser:
                 name = expr.name
                 return Assign(name, value)
             self._error(equals, "Invalid assignment target")
+        return expr
+
+    def _or(self) -> Expr:
+        expr: Expr = self._and()
+
+        while self.match(TokenType.OR):
+            op: Token = self.previous()
+            right: Expr = self._and()
+            expr = Logical(expr, op, right)
+
+        return expr
+
+    def _and(self) -> Expr:
+        expr: Expr = self._equality()
+
+        while self.match(TokenType.AND):
+            op: Token = self.previous()
+            right: Expr = self._equality()
+            expr = Logical(expr, op, right)
+
         return expr
 
     def _equality(self):
@@ -119,6 +137,7 @@ class Parser:
             TokenType.GREATER_EQUAL,
             TokenType.LESS,
             TokenType.LESS_EQUAL,
+            TokenType.EQUAL_EQUAL,
         ):
             op = self.previous()
             right = self.term()
