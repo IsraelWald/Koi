@@ -58,6 +58,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
             print(error)
         except Exception as e:
             print(e)
+            # raise e
             raise SystemExit
 
     def _stringify(self, value):
@@ -190,11 +191,11 @@ class Interpreter(ExprVisitor, StmtVisitor):
             self.env = previous
 
     def visit_call_expr(self, expr: Call):
-        callee = self._evaluate(expr.callee)
+        fn = self._evaluate(expr.callee)
         args = [self._evaluate(arg) for arg in expr.arguments]
-        if not isinstance(callee, KoiCallable):
+        if not isinstance(fn, KoiCallable):
             raise KoiRuntimeError(expr.paren, "Can only call functions and classes")
-        fn = KoiCallable(callee)
+        # fn = KoiCallable(callee)
         if len(args) != fn.arity():
             raise KoiRuntimeError(
                 expr.paren, f"Expected {fn.arity()} arguments but got {len(args)}"

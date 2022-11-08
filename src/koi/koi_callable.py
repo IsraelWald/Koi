@@ -1,10 +1,15 @@
-from .interpreter import Interpreter
-from typing import List
+from typing import List, TYPE_CHECKING
+from abc import ABC, abstractmethod
+
+if TYPE_CHECKING:
+    from .interpreter import Interpreter
 
 
-class KoiCallable:
+class KoiCallable(ABC):
+    @abstractmethod
     def arity(self) -> int:
-        raise NotImplementedError("Implement the arity function")
+        raise NotImplementedError
 
-    def call(self, interpreter: Interpreter, args: List):
-        raise NotImplementedError("Implement the call function")
+    @abstractmethod
+    def call(self, interpreter, args: List):
+        raise NotImplementedError
