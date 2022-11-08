@@ -12,7 +12,7 @@ from .expr import (
     Variable,
     Assign,
 )
-from .stmt import Expression, Stmt, Var, Block, If, While
+from .stmt import Expression, Function, Stmt, Var, Block, If, While
 from .token_type import TokenType
 from .token import Token
 from .stmt import Print
@@ -39,12 +39,34 @@ class Parser:
 
     def _declaration(self) -> Stmt:
         try:
+            if self.match(TokenType.FUNC):
+                return self._function("function")
             if self.match(TokenType.VAR):
                 return self._var_declaration()
             return self._statement()
         except ParseError:
             self._synchronize()
             return None
+
+    def _function(self, kind: str) -> Function:
+        name = self.consume(TokenType.IDENTIFIER, f"Expected {kind} name")
+        name  # Here to avoid flake8 F841
+        self.consume(TokenType.LEFT_PAREN, f"Expect '(' after {kind} name")
+        params: List[Token] = []
+        if not self.check(TokenType.RIGHT_PAREN):
+            params.append(
+                self.consume(
+                    TokenType.IDENTIFIER, "Parameter names must be valid identifiers"
+                )
+            )
+            while self.match(TokenType.COMMA):
+                params.append(
+                    self.consume(
+                        TokenType.IDENTIFIER,
+                        "Parameter names must be valid identifiers",
+                    )
+                )
+        self.consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters")
 
     def _var_declaration(self) -> Stmt:
         name: Token = self.consume(TokenType.IDENTIFIER, "Expected identifier")
