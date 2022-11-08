@@ -51,7 +51,8 @@ class Interpreter(ExprVisitor, StmtVisitor):
             return statement.accept(self)
         except KoiRuntimeError as error:
             print(error)
-        except Exception:
+        except Exception as e:
+            print(e)
             raise SystemExit
 
     def _stringify(self, value):
@@ -129,7 +130,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return None
 
     def visit_expression_stmt(self, stmt: Expression):
-        print(self._stringify(self._evaluate(stmt.expression)))
+        self._stringify(self._evaluate(stmt.expression))
         return None
 
     def visit_print_stmt(self, stmt: Print):
@@ -229,10 +230,12 @@ class Interpreter(ExprVisitor, StmtVisitor):
         if expr.operator.tok_type == TokenType.OR:
             if self._is_truthy(left):
                 return left
-            else:
-                if not self._is_truthy(left):
-                    return left
+        else:
+            if not self._is_truthy(left):
+                return left
         return self._evaluate(expr.right)
 
     def visit_while_stmt(self, stmt: While):
-        return super().visit_while_stmt(stmt)
+        while self._is_truthy(self._evaluate(stmt.condition)):
+            self._execute(stmt.body)
+        return None

@@ -17,14 +17,17 @@ class Environment:
     def get(self, name: Token) -> Any:
         if name.lexeme in self.values:
             return self.values[name.lexeme]
-        if self.parent != None:
+        if self.parent is not None:
             return self.parent.get(name)
         raise KoiRuntimeError(name, f"Undefined variable {name.lexeme!r}")
-    
+
     def assign(self, name: Token, value: Any):
         if name.lexeme in self.values:
             self.values[name.lexeme] = value
             return
-        if self.parent != None:
+        if self.parent is not None:
             self.parent.assign(name, value)
-        raise KoiRuntimeError(name, f"Cannot assign to variable {name.lexeme!r} before it was declared.")
+            return
+        raise KoiRuntimeError(
+            name, f"Cannot assign to variable {name.lexeme!r} before it was declared."
+        )
