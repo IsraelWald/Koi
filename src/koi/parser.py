@@ -51,9 +51,44 @@ class Parser:
             return self._if_statement()
         if self.match(TokenType.LEFT_BRACE):
             return Block(self._block())
-        if self.match((TokenType.WHILE)):
+        if self.match(TokenType.WHILE):
             return self._while_statement()
+        if self.match(TokenType.FOR):
+            return self._for_statement()
         return self._expression_statement()
+
+    def _for_statement(self):
+        self.consume(TokenType.LEFT_PAREN, "Expect '(' in for loop")
+        # The initializer statment
+        initializer: Stmt
+        if self.match(TokenType.SEMICOLON):
+            initializer = None
+        elif self.match(TokenType.VAR):
+            initializer = self._var_declaration()
+        else:
+            initializer = self._expression_statement()
+        # The condition of the loop
+        condition: Expr
+        if not (self.check(TokenType.SEMICOLON)):
+            condition = self._expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' after loop condition")
+        # The increment portion of the loop
+        increment: Expr
+        if not (self.check(TokenType.RIGHT_PAREN)):
+            increment = self._expression()
+        self.consume(TokenType.RIGHT_PAREN, "Expect ')' after for loop clause")
+        # Get the body
+        body = self._statement()
+
+        # Desugar it; turn it into a while loop
+        if increment is not None:
+            body = Block([body, Expression(increment)])
+        if condition is None:
+            condition = Literal(True)
+        body = While(condition, body)
+        if initializer is not None:
+            body = Block([initializer, body])
+        return body
 
     def _while_statement(self):
         self.consume(TokenType.LEFT_PAREN, "Expected '(' after while keyword")
