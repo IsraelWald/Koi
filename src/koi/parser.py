@@ -2,7 +2,7 @@ from typing import List
 
 # https://www.craftinginterpreters.com/parsing-expressions.html#syntax-errors
 from .expr import Binary, Grouping, Literal, Logical, Unary, Expr, Variable, Assign
-from .stmt import Expression, Stmt, Var, Block, If
+from .stmt import Expression, Stmt, Var, Block, If, While
 from .token_type import TokenType
 from .token import Token
 from .stmt import Print
@@ -51,7 +51,17 @@ class Parser:
             return self._if_statement()
         if self.match(TokenType.LEFT_BRACE):
             return Block(self._block())
+        if self.match((TokenType.WHILE)):
+            return self._while_statement()
         return self._expression_statement()
+
+    def _while_statement(self):
+        self.consume(TokenType.LEFT_PAREN, "Expected '(' after while keyword")
+        condition: Expr = self._expression()
+        self.consume(TokenType.RIGHT_PAREN, "Expected ')' after while condition")
+        body: Stmt = self._statement()
+
+        return While(condition, body)
 
     def _if_statement(self):
         self.consume(TokenType.LEFT_PAREN, "Expected '(' after keyword 'if'")
