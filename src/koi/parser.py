@@ -1,7 +1,17 @@
 from typing import List
 
 # https://www.craftinginterpreters.com/parsing-expressions.html#syntax-errors
-from .expr import Binary, Grouping, Literal, Logical, Unary, Expr, Variable, Assign
+from .expr import (
+    Binary,
+    Call,
+    Grouping,
+    Literal,
+    Logical,
+    Unary,
+    Expr,
+    Variable,
+    Assign,
+)
 from .stmt import Expression, Stmt, Var, Block, If, While
 from .token_type import TokenType
 from .token import Token
@@ -214,8 +224,27 @@ class Parser:
             op = self.previous()
             right = self.unary()
             return Unary(op, right)
-        else:
-            return self.primary()
+        return self._call()
+
+    def _call(self) -> Expr:
+        expr = self.primary()
+        while True:
+            if self.match(TokenType.LEFT_PAREN):
+                expr = self._finish_call(expr)
+            else:
+                break
+        return expr
+
+    def _finish_call(self, callee: Expr) -> Expr:
+        arguments: List[Expr] = []
+        if not (self.check(TokenType.RIGHT_PAREN)):
+            arguments.append(self._expression())
+            while self.match(TokenType.COMMA):
+                arguments.append(self._expression())
+        paren: Token = self.consume(
+            TokenType.RIGHT_PAREN, "Expect ')' after arguments in call expression"
+        )
+        return Call(callee, paren, arguments)
 
     def primary(self):
         if self.match(TokenType.FALSE):

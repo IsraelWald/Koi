@@ -1,4 +1,6 @@
+from .clock import Clock
 from .environment import Environment
+from .koi_callable import KoiCallable
 from .expr import (
     Assign,
     ExprVisitor,
@@ -36,7 +38,10 @@ from typing import List
 
 class Interpreter(ExprVisitor, StmtVisitor):
     def __init__(self) -> None:
-        self.env = Environment()
+        self.globals = Environment()
+        self.env = self.globals
+
+        self.globals.define("clock", Clock())
 
     def interpret(self, statements: List[Stmt]):
         try:
@@ -185,7 +190,16 @@ class Interpreter(ExprVisitor, StmtVisitor):
             self.env = previous
 
     def visit_call_expr(self, expr: Call):
-        return super().visit_call_expr(expr)
+        callee = self._evaluate(expr.callee)
+        args = [self._evaluate(arg) for arg in expr.arguments]
+        if not isinstance(callee, KoiCallable):
+            raise KoiRuntimeError(expr.paren, "Can only call functions and classes")
+        fn = KoiCallable(callee)
+        if len(args) != fn.arity():
+            raise KoiRuntimeError(
+                expr.paren, f"Expected {fn.arity()} arguments but got {len(args)}"
+            )
+        return fn.call(self, args)
 
     def visit_var_stmt(self, stmt: Var):
         value = None
