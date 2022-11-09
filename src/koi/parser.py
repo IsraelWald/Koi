@@ -1,6 +1,5 @@
 from typing import List
 
-# https://www.craftinginterpreters.com/parsing-expressions.html#syntax-errors
 from .expr import (
     Binary,
     Call,
@@ -67,6 +66,9 @@ class Parser:
                     )
                 )
         self.consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters")
+        self.consume(TokenType.LEFT_BRACE, "Expect '{' before " + kind + " body")
+        body = self._block()
+        return Function(name, params, body)
 
     def _var_declaration(self) -> Stmt:
         name: Token = self.consume(TokenType.IDENTIFIER, "Expected identifier")
