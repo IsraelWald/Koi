@@ -1,9 +1,9 @@
-from .koi_callable import KoiCallable
+from ..koi_callable import KoiCallable
 from typing import TYPE_CHECKING, List
 import time
 
 if TYPE_CHECKING:
-    from .interpreter import Interpreter
+    from ..interpreter import Interpreter
 
 
 class Clock(KoiCallable):
