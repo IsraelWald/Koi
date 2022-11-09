@@ -2,6 +2,7 @@ from .std.clock import Clock
 from .environment import Environment
 from .koi_callable import KoiCallable
 from .koi_function import KoiFunction
+from .koi_return_exception import KoiReturnException
 from .expr import (
     Assign,
     ExprVisitor,
@@ -238,7 +239,10 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return None
 
     def visit_return_stmt(self, stmt: Return):
-        return super().visit_return_stmt(stmt)
+        value = None
+        if stmt.value:
+            value = self._evaluate(stmt.value)
+        raise KoiReturnException(value=value)
 
     def visit_set_expr(self, expr: Set):
         return super().visit_set_expr(expr)
