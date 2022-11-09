@@ -1,6 +1,7 @@
 from .std.clock import Clock
 from .environment import Environment
 from .koi_callable import KoiCallable
+from .koi_function import KoiFunction
 from .expr import (
     Assign,
     ExprVisitor,
@@ -222,7 +223,9 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return self.env.get(expr.name)
 
     def visit_function_stmt(self, stmt: Function):
-        return super().visit_function_stmt(stmt)
+        fn = KoiFunction(stmt)
+        self.env.define(stmt.name.lexeme, fn)
+        return None
 
     def visit_get_expr(self, expr: Get):
         return super().visit_get_expr(expr)

@@ -3,15 +3,11 @@ from .koi_callable import KoiCallable
 from .stmt import Function
 from typing import List, TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from .interpreter import Interpreter
-
-
 class KoiFunction(KoiCallable):
     def __init__(self, declaration: Function) -> None:
         self.decl = declaration
-    
-    def call(self, interpreter: Interpreter, args: List):
+
+    def call(self, interpreter, args: List):
         env = Environment(interpreter.globals)
         for idx, param in enumerate(self.decl.params):
             env.define(param.lexeme, args[idx])
