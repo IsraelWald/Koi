@@ -4,15 +4,15 @@ from .koi_return_exception import KoiReturnException
 from .stmt import Function
 from typing import List
 
+
 class KoiFunction(KoiCallable):
     def __init__(self, declaration: Function) -> None:
         self.decl = declaration
 
     def call(self, interpreter, args: List):
         env = Environment(interpreter.globals)
-        for idx, param in enumerate(self.decl.params):
-            env.define(param.lexeme, args[idx])
-
+        for decl_token, arg in zip(self.decl.params, args):
+            env.define(decl_token.lexeme, arg)
         try:
             interpreter._exec_block(self.decl.body, env)
         except KoiReturnException as return_value:

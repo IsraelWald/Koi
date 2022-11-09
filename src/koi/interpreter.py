@@ -54,14 +54,16 @@ class Interpreter(ExprVisitor, StmtVisitor):
             raise SystemExit
 
     def _execute(self, statement: Stmt):
-        try:
-            return statement.accept(self)
-        except KoiRuntimeError as error:
-            print(error)
-        except Exception as e:
-            print(e)
-            # raise e
-            raise SystemExit
+        # try:
+        return statement.accept(self)
+
+    # except KoiRuntimeError as error:
+    #     print("returning")
+    #     print(error)
+    # except Exception as e:
+    #     print(e)
+    #     # raise e
+    #     raise SystemExit
 
     def _stringify(self, value):
         if value is None:
