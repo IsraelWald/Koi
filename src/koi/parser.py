@@ -11,7 +11,7 @@ from .expr import (
     Variable,
     Assign,
 )
-from .stmt import Expression, Function, Stmt, Var, Block, If, While
+from .stmt import Expression, Function, Stmt, Var, Block, If, While, Return
 from .token_type import TokenType
 from .token import Token
 from .stmt import Print
@@ -89,7 +89,20 @@ class Parser:
             return self._while_statement()
         if self.match(TokenType.FOR):
             return self._for_statement()
+        if self.match(TokenType.RETURN):
+            return self._return_statement()
         return self._expression_statement()
+
+    def _return_statement(self):
+        keyword = self.previous()
+        value: Expr = None
+        if not self.check(TokenType.SEMICOLON):
+            # If there's a value return it
+            # Otherwise nil is the value
+            value = self._expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' after return value")
+        return Return(keyword, value)
+
 
     def _for_statement(self):
         self.consume(TokenType.LEFT_PAREN, "Expect '(' in for loop")
