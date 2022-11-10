@@ -42,6 +42,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
     def __init__(self) -> None:
         self.globals = Environment()
         self.env = self.globals
+        self.locals = dict()
 
         self.globals.define("clock", Clock())
 
@@ -263,3 +264,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
         while self._is_truthy(self._evaluate(stmt.condition)):
             self._execute(stmt.body)
         return None
+
+    def resolve(self, expr: Expr, depth: int):
+        self.locals[expr] = depth
+        # https://craftinginterpreters.com/resolving-and-binding.html#accessing-a-resolved-variable
