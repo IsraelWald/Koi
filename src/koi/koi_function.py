@@ -6,11 +6,12 @@ from typing import List
 
 
 class KoiFunction(KoiCallable):
-    def __init__(self, declaration: Function) -> None:
+    def __init__(self, declaration: Function, closure: Environment) -> None:
         self.decl = declaration
+        self.closure = closure
 
     def call(self, interpreter, args: List):
-        env = Environment(interpreter.globals)
+        env = Environment(self.closure)
         for decl_token, arg in zip(self.decl.params, args):
             env.define(decl_token.lexeme, arg)
         try:

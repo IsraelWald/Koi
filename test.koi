@@ -1,7 +1,13 @@
-func fib(n) {
-   if (n <= 1) {
-      return n;
+fun makeCounter() {
+   var i = 0;
+   fun count() {
+      i = i + 1;
+      print i;
    }
-   return fib(n - 2) + fib(n - 1);
+   return count;
 }
-print fib(10);
+
+var c1 = makeCounter();
+for (;;) {
+   c1();
+}

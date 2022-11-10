@@ -103,7 +103,6 @@ class Parser:
         self.consume(TokenType.SEMICOLON, "Expect ';' after return value")
         return Return(keyword, value)
 
-
     def _for_statement(self):
         self.consume(TokenType.LEFT_PAREN, "Expect '(' in for loop")
         # The initializer statment
@@ -115,12 +114,12 @@ class Parser:
         else:
             initializer = self._expression_statement()
         # The condition of the loop
-        condition: Expr
+        condition: Expr = None
         if not (self.check(TokenType.SEMICOLON)):
             condition = self._expression()
         self.consume(TokenType.SEMICOLON, "Expect ';' after loop condition")
         # The increment portion of the loop
-        increment: Expr
+        increment: Expr = None
         if not (self.check(TokenType.RIGHT_PAREN)):
             increment = self._expression()
         self.consume(TokenType.RIGHT_PAREN, "Expect ')' after for loop clause")

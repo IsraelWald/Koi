@@ -226,7 +226,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return self.env.get(expr.name)
 
     def visit_function_stmt(self, stmt: Function):
-        fn = KoiFunction(stmt)
+        fn = KoiFunction(stmt, self.env)
         self.env.define(stmt.name.lexeme, fn)
         return None
 

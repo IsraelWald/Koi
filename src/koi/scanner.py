@@ -19,7 +19,7 @@ class Scanner:
         "true": TokenType.TRUE,
         "false": TokenType.FALSE,
         "nil": TokenType.NIL,
-        "func": TokenType.FUNC,
+        "fun": TokenType.FUNC,
         "for": TokenType.FOR,
         "while": TokenType.WHILE,
         "print": TokenType.PRINT,
