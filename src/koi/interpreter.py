@@ -107,7 +107,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
             case TokenType.PLUS:
                 if isinstance(left, (int, float)) and isinstance(right, (int, float)):
                     return float(left) + float(right)
-                elif isinstance(left, str) and isinstance(right, str):
+                elif isinstance(left, str):
                     return str(left) + str(right)
                 else:
                     raise KoiRuntimeError(
