@@ -11,7 +11,7 @@ from .expr import (
     Variable,
     Assign,
 )
-from .stmt import Expression, Function, Stmt, Var, Block, If, While, Return
+from .stmt import Expression, Function, Stmt, Var, Block, If, While, Return, Class
 from .token_type import TokenType
 from .token import Token
 from .stmt import Print
@@ -40,6 +40,8 @@ class Parser:
         try:
             if self.match(TokenType.FUNC):
                 return self._function("function")
+            if self.match(TokenType.CLASS):
+                return self._class_declaration()
             if self.match(TokenType.VAR):
                 return self._var_declaration()
             return self._statement()
@@ -47,6 +49,16 @@ class Parser:
             self._synchronize()
             return None
 
+    def _class_declaration(self):
+        name: Token = self.consume(TokenType.IDENTIFIER, "Expected valid identifier in class declaration")
+        self.consume(TokenType.LEFT_BRACE, "Expected block after class declaration")
+
+        methods: List[Function] = []
+        while not self.check(TokenType.RIGHT_BRACE) and not self.is_at_end():
+            methods.append(self._function("method"))
+
+        self.consume(TokenType.RIGHT_BRACE, "Expect '}' after class body")
+        return Class(name, methods)
     def _function(self, kind: str) -> Function:
         name = self.consume(TokenType.IDENTIFIER, f"Expected {kind} name")
         name  # Here to avoid flake8 F841
