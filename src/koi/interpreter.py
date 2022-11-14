@@ -1,4 +1,4 @@
-from .std.clock import Clock
+from .std import Clock
 from .environment import Environment
 from .koi_callable import KoiCallable
 from .koi_function import KoiFunction
