@@ -1,10 +1,6 @@
 from ..koi_callable import KoiCallable
-from typing import TYPE_CHECKING, List
+from typing import List
 import time
-
-if TYPE_CHECKING:
-    from ..interpreter import Interpreter
-
 
 class Clock(KoiCallable):
     def arity(self) -> int:

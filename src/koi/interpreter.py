@@ -1,4 +1,4 @@
-from .std import Clock
+from .std import Clock, Input
 from .environment import Environment
 from .koi_callable import KoiCallable
 from .koi_function import KoiFunction
@@ -45,6 +45,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
         self.locals = dict()
 
         self.globals.define("clock", Clock())
+        self.globals.define("input", Input())
 
     def interpret(self, statements: List[Stmt]):
         try:
