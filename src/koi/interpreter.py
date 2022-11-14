@@ -36,14 +36,14 @@ from .stmt import (
 from .token_type import TokenType
 from .koi_runtime_error import KoiRuntimeError
 
-from typing import List
+from typing import List, Dict, Any
 
 
 class Interpreter(ExprVisitor, StmtVisitor):
     def __init__(self) -> None:
         self.globals = Environment()
         self.env = self.globals
-        self.locals = dict()
+        self.locals: Dict[str, Any] = dict()
 
         self.globals.define("clock", Clock())
         self.globals.define("input", Input())
