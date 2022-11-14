@@ -70,8 +70,8 @@ class Resolver(ExprVisitor, StmtVisitor):
         scope = self.scopes[-1]
         scope[name.lexeme] = True
 
-    def _resolve_function(self, function: Function, type:  FunctionType):
-        enclosing = self.current_function
+    def _resolve_function(self, function: Function, type: FunctionType):
+        enclosing: FunctionType = self.current_function
         self.current_function = type
 
         self._begin_scope()
@@ -95,7 +95,7 @@ class Resolver(ExprVisitor, StmtVisitor):
         self._declare(stmt.name)
         self._define(stmt.name)
 
-        self._resolve_function(stmt)
+        self._resolve_function(stmt, FunctionType.FUNCTION)
 
     def visit_expression_stmt(self, stmt: Expression):
         self._resolve_expression(stmt.expression)

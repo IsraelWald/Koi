@@ -1,3 +1,4 @@
+from src.koi.token import Token
 from .std import Clock, Input
 from .environment import Environment
 from .koi_callable import KoiCallable
@@ -180,7 +181,12 @@ class Interpreter(ExprVisitor, StmtVisitor):
 
     def visit_assign_expr(self, expr: Assign):
         value = self._evaluate(expr.value)
-        self.env.assign(expr.name, value)
+        
+        distance = self.locals.get(expr)
+        if distance is not None:
+            self.env.assign_at(distance, expr.name, value)
+        else:
+            self.globals.assign(expr.name, value)
         return value
 
     def visit_block_stmt(self, stmt: Block):
@@ -225,7 +231,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return super().visit_this_expr(expr)
 
     def visit_variable_expr(self, expr: Variable):
-        return self.env.get(expr.name)
+        return self._lookup_variable(expr.name, expr)
 
     def visit_function_stmt(self, stmt: Function):
         fn = KoiFunction(stmt, self.env)
@@ -269,3 +275,10 @@ class Interpreter(ExprVisitor, StmtVisitor):
     def resolve(self, expr: Expr, depth: int):
         self.locals[expr] = depth
         # https://craftinginterpreters.com/resolving-and-binding.html#accessing-a-resolved-variable
+
+    def _lookup_variable(self, name: Token, expr: Variable):
+        distance = self.locals.get(expr)
+        if distance is not None:
+            return self.env.get_at(distance, name.lexeme)
+        else:
+            return self.globals.get(name)

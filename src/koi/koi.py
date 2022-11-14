@@ -6,6 +6,7 @@ from .scanner import Scanner
 from .parser import Parser
 from .koi_runtime_error import KoiRuntimeError
 from .interpreter import Interpreter
+from .resolver import Resolver
 
 
 class Koi:
@@ -20,7 +21,15 @@ class Koi:
 
         parser = Parser(tokens, on_error=self.token_error)
         statements = parser.parse()
+        if self.had_error:
+            print("Had error")
+            return
 
+        resolver = Resolver(self.interpreter, on_error=self.token_error)
+        resolver.resolve(statements)
+        if self.had_error:
+            print("Had error")
+            return
         value = self.interpreter.interpret(statements)
         if value:
             print(value)

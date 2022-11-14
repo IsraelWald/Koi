@@ -19,7 +19,7 @@ class Environment:
             return self.values[name.lexeme]
         if self.parent is not None:
             return self.parent.get(name)
-        raise KoiRuntimeError(name, f"Undefined variable {name.lexeme!r}")
+        raise KoiRuntimeError(name, f"Undefined name {name.lexeme!r}")
 
     def assign(self, name: Token, value: Any):
         if name.lexeme in self.values:
@@ -31,3 +31,17 @@ class Environment:
         raise KoiRuntimeError(
             name, f"Cannot assign to variable {name.lexeme!r} before it was declared."
         )
+
+    def get_at(self, distance: int, name: str) -> Any:
+        return self._ancestor(distance).values.get(name)
+
+    def _ancestor(self, distance: int) -> Self:
+        env: Environment = self
+
+        for _ in range(distance):
+            env = env.parent
+
+        return env
+
+    def assign_at(self, distance: int, name: Token, value: Any) -> None:
+        self._ancestor(distance).values[name.lexeme] = value
