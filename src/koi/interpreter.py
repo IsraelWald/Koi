@@ -236,7 +236,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return super().visit_super_expr(expr)
 
     def visit_this_expr(self, expr: This):
-        return super().visit_this_expr(expr)
+        return self._lookup_variable(expr.keyword, expr)
 
     def visit_variable_expr(self, expr: Variable):
         return self._lookup_variable(expr.name, expr)

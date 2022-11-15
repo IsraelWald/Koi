@@ -1,11 +1,11 @@
+var start = clock();
 class Person {
-   whoami(name) {
-      this.name;
-      print "I am " + name;
+   whoami() {
+      print "I am " + this.name;
    }
 }
 
 var dave = Person();
 dave.name = "Dave";
-dave.whoami(dave.name);
-// https://craftinginterpreters.com/classes.html#this
+dave.whoami();
+print clock() - start;
