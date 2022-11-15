@@ -7,3 +7,4 @@ class Person {
 var dave = Person();
 dave.name = "Dave";
 dave.whoami(dave.name);
+// https://craftinginterpreters.com/classes.html#this
