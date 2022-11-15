@@ -2,6 +2,7 @@ from ..koi_callable import KoiCallable
 from typing import List
 import time
 
+
 class Input(KoiCallable):
     def arity(self) -> int:
         return 1
