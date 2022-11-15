@@ -225,7 +225,11 @@ class Interpreter(ExprVisitor, StmtVisitor):
 
     def visit_class_stmt(self, stmt: Class):
         self.env.define(stmt.name.lexeme, None)
-        klass: KoiClass = KoiClass(stmt.name.lexeme)
+        methods = {}
+        for method in stmt.methods:
+            fn = KoiFunction(method, self.env)
+            methods[method.name.lexeme] = fn
+        klass: KoiClass = KoiClass(stmt.name.lexeme, methods)
         self.env.assign(stmt.name, klass)
 
     def visit_super_expr(self, expr: Super):

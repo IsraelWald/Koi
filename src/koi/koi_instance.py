@@ -15,8 +15,11 @@ class KoiInstance:
         if name.lexeme in self.fields:
             return self.fields[name.lexeme]
 
+        method = self.klass.find_method(name.lexeme)
+        if method is not None:
+            return method
+
         raise KoiRuntimeError(name, f"Undefined property {name.lexeme!r}")
 
     def set(self, name: Token, value: Any):
         self.fields[name.lexeme] = value
-        

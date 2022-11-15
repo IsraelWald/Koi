@@ -187,6 +187,10 @@ class Resolver(ExprVisitor, StmtVisitor):
         self._declare(stmt.name)
         self._define(stmt.name)
 
+        for method in stmt.methods:
+            decl = FunctionType.METHOD
+            self._resolve_function(method, decl)
+
     def visit_get_expr(self, expr: Get):
         self._resolve_expression(expr.obj)
         return None

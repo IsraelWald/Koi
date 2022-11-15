@@ -1,10 +1,9 @@
-class Food {
-   poop() {
-      print "Pooping";
+class Person {
+   whoami(name) {
+      print "I am " + name;
    }
 }
 
-var f = Food();
-print f;
-f.name = "Steak";
-print f.name;
+var dave = Person();
+dave.name = "Dave";
+dave.whoami(dave.name);
