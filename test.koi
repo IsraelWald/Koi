@@ -4,5 +4,7 @@ class Food {
    }
 }
 
-print Food;
-print Food();
+var f = Food();
+print f;
+f.name = "Steak";
+print f.name;

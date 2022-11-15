@@ -174,7 +174,8 @@ class Resolver(ExprVisitor, StmtVisitor):
         self._resolve_expression(expr.right)
 
     def visit_set_expr(self, expr: Set):
-        return super().visit_set_expr(expr)
+        self._resolve_expression(expr.value)
+        self._resolve_expression(expr.obj)
 
     def visit_this_expr(self, expr: This):
         return super().visit_this_expr(expr)
@@ -187,5 +188,5 @@ class Resolver(ExprVisitor, StmtVisitor):
         self._define(stmt.name)
 
     def visit_get_expr(self, expr: Get):
-        self.resolve(expr.obj)
+        self._resolve_expression(expr.obj)
         return None

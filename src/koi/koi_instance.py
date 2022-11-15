@@ -1,3 +1,4 @@
+from typing import Any
 from .token import Token
 from .koi_runtime_error import KoiRuntimeError
 
@@ -15,3 +16,7 @@ class KoiInstance:
             return self.fields[name.lexeme]
 
         raise KoiRuntimeError(name, f"Undefined property {name.lexeme!r}")
+
+    def set(self, name: Token, value: Any):
+        self.fields[name.lexeme] = value
+        

@@ -268,7 +268,14 @@ class Interpreter(ExprVisitor, StmtVisitor):
         raise KoiReturnException(value=value)
 
     def visit_set_expr(self, expr: Set):
-        return super().visit_set_expr(expr)
+        obj = self._evaluate(expr.obj)
+
+        if not isinstance(obj, KoiInstance):
+            raise KoiRuntimeError(expr.name, "Must be an instance to have fields")
+
+        value = self._evaluate(expr.value)
+        obj.set(expr.name, value)
+        return value
 
     def visit_logical_expr(self, expr: Logical):
         left = self._evaluate(expr.left)

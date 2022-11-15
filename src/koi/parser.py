@@ -7,6 +7,7 @@ from .expr import (
     Grouping,
     Literal,
     Logical,
+    Set,
     Unary,
     Expr,
     Variable,
@@ -203,6 +204,8 @@ class Parser:
             if isinstance(expr, Variable):
                 name = expr.name
                 return Assign(name, value)
+            elif isinstance(expr, Get):
+                return Set(expr.obj, expr.name, value)
             self._error(equals, "Invalid assignment target")
         return expr
 
