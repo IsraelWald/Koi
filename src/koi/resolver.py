@@ -178,6 +178,8 @@ class Resolver(ExprVisitor, StmtVisitor):
         self._resolve_expression(expr.obj)
 
     def visit_this_expr(self, expr: This):
+        if self.current_class == ClassType.NONE:
+            self.on_error(expr.keyword, "Cannot use 'this' keyword outside of a class")
         self._resolve_local(expr, expr.keyword)
         return None
 
@@ -185,6 +187,9 @@ class Resolver(ExprVisitor, StmtVisitor):
         return super().visit_super_expr(expr)
 
     def visit_class_stmt(self, stmt: Class):
+        enclosing_class = self.current_class
+        current_class = ClassType.CLASS
+
         self._declare(stmt.name)
         self._define(stmt.name)
 
@@ -196,6 +201,8 @@ class Resolver(ExprVisitor, StmtVisitor):
             self._resolve_function(method, decl)
 
         self._end_scope()
+
+        self.current_class = enclosing_class
 
     def visit_get_expr(self, expr: Get):
         self._resolve_expression(expr.obj)
