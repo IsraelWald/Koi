@@ -50,7 +50,9 @@ class Parser:
             return None
 
     def _class_declaration(self):
-        name: Token = self.consume(TokenType.IDENTIFIER, "Expected valid identifier in class declaration")
+        name: Token = self.consume(
+            TokenType.IDENTIFIER, "Expected valid identifier in class declaration"
+        )
         self.consume(TokenType.LEFT_BRACE, "Expected block after class declaration")
 
         methods: List[Function] = []
@@ -58,7 +60,8 @@ class Parser:
             methods.append(self._function("method"))
 
         self.consume(TokenType.RIGHT_BRACE, "Expect '}' after class body")
-        return Class(name, None, methods)
+        return Class(name, methods)
+
     def _function(self, kind: str) -> Function:
         name = self.consume(TokenType.IDENTIFIER, f"Expected {kind} name")
         name  # Here to avoid flake8 F841
