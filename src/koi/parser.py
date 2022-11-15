@@ -3,6 +3,7 @@ from typing import List
 from .expr import (
     Binary,
     Call,
+    Get,
     Grouping,
     Literal,
     Logical,
@@ -282,6 +283,12 @@ class Parser:
         while True:
             if self.match(TokenType.LEFT_PAREN):
                 expr = self._finish_call(expr)
+            elif self.match(TokenType.DOT):
+                name = self.consume(
+                    TokenType.IDENTIFIER,
+                    "Expect valid identifier as property name following '.'",
+                )
+                expr = Get(expr, name)
             else:
                 break
         return expr

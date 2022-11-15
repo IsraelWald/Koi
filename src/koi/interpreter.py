@@ -1,3 +1,4 @@
+from src.koi.koi_instance import KoiInstance
 from .token import Token
 from .std import Clock, Input
 from .environment import Environment
@@ -182,7 +183,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
 
     def visit_assign_expr(self, expr: Assign):
         value = self._evaluate(expr.value)
-        
+
         distance = self.locals.get(expr)
         if distance is not None:
             self.env.assign_at(distance, expr.name, value)
@@ -242,7 +243,16 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return None
 
     def visit_get_expr(self, expr: Get):
-        return super().visit_get_expr(expr)
+        # Evaluate the expression whose property is being accessed
+        obj = self._evaluate(expr.obj)
+        # If it's a KoiInstance
+        if isinstance(obj, KoiInstance):
+            # Find the property
+            return obj.get(expr.name)
+
+        raise KoiRuntimeError(
+            expr.name, "Can only access properties from class instances"
+        )
 
     def visit_if_stmt(self, stmt: If):
         if self._is_truthy(self._evaluate(stmt.condition)):

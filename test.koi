@@ -4,4 +4,5 @@ class Food {
    }
 }
 
+print Food;
 print Food();

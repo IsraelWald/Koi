@@ -187,4 +187,5 @@ class Resolver(ExprVisitor, StmtVisitor):
         self._define(stmt.name)
 
     def visit_get_expr(self, expr: Get):
-        return super().visit_get_expr(expr)
+        self.resolve(expr.obj)
+        return None
