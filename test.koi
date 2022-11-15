@@ -3,3 +3,5 @@ class Food {
       print "Pooping";
    }
 }
+
+print Food();

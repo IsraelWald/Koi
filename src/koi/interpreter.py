@@ -1,7 +1,8 @@
-from src.koi.token import Token
+from .token import Token
 from .std import Clock, Input
 from .environment import Environment
 from .koi_callable import KoiCallable
+from .koi_class import KoiClass
 from .koi_function import KoiFunction
 from .koi_return_exception import KoiReturnException
 from .expr import (
@@ -222,7 +223,9 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return None
 
     def visit_class_stmt(self, stmt: Class):
-        return super().visit_class_stmt(stmt)
+        self.env.define(stmt.name.lexeme, None)
+        klass: KoiClass = KoiClass(stmt.name.lexeme)
+        self.env.assign(stmt.name, klass)
 
     def visit_super_expr(self, expr: Super):
         return super().visit_super_expr(expr)

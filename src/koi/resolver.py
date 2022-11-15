@@ -4,8 +4,35 @@ from typing import Deque, Dict
 from src.koi.interpreter import Interpreter
 
 from .token import Token
-from .expr import Assign, Binary, Call, Expr, ExprVisitor, Get, Grouping, Literal, Logical, Set, Super, This, Unary, Variable
-from .stmt import Block, Class, Function, If, Print, Return, Stmt, StmtVisitor, Expression, Var, While
+from .expr import (
+    Assign,
+    Binary,
+    Call,
+    Expr,
+    ExprVisitor,
+    Get,
+    Grouping,
+    Literal,
+    Logical,
+    Set,
+    Super,
+    This,
+    Unary,
+    Variable,
+)
+from .stmt import (
+    Block,
+    Class,
+    Function,
+    If,
+    Print,
+    Return,
+    Stmt,
+    StmtVisitor,
+    Expression,
+    Var,
+    While,
+)
 from .function_type import FunctionType
 from .class_type import ClassType
 
@@ -43,6 +70,7 @@ class Resolver(ExprVisitor, StmtVisitor):
                 self.interpreter.resolve(expr, idx)
                 return
         # Not found, assume it's global
+
     def _begin_scope(self):
         self.scopes.append({})
 
@@ -61,9 +89,11 @@ class Resolver(ExprVisitor, StmtVisitor):
             return
         scope = self.scopes[-1]
         if name.lexeme in scope:
-            self.on_error(name, f"Variabled with name {name} already exists in this scope")
+            self.on_error(
+                name, f"Variabled with name {name} already exists in this scope"
+            )
         scope[name.lexeme] = False
-    
+
     def _define(self, name: Token):
         if len(self.scopes) == 0:
             return
@@ -105,7 +135,7 @@ class Resolver(ExprVisitor, StmtVisitor):
         self._resolve_stmt(stmt.then_branch)
         if stmt.else_branch:
             self.resolve(stmt.else_branch)
-        
+
     def visit_print_stmt(self, stmt: Print):
         self._resolve_expression(stmt.expression)
 
@@ -132,14 +162,13 @@ class Resolver(ExprVisitor, StmtVisitor):
 
     def visit_grouping_expr(self, expr: Grouping):
         self._resolve_expression(expr.expression)
-    
+
     def visit_literal_expr(self, expr: Literal):
         return None
 
     def visit_logical_expr(self, expr: Logical):
         self._resolve_expression(expr.left)
         self._resolve_expression(expr.right)
-
 
     def visit_unary_expr(self, expr: Unary):
         self._resolve_expression(expr.right)
@@ -154,7 +183,8 @@ class Resolver(ExprVisitor, StmtVisitor):
         return super().visit_super_expr(expr)
 
     def visit_class_stmt(self, stmt: Class):
-        return super().visit_class_stmt(stmt)
+        self._declare(stmt.name)
+        self._define(stmt.name)
 
     def visit_get_expr(self, expr: Get):
         return super().visit_get_expr(expr)
