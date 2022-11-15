@@ -58,7 +58,6 @@ class Parser:
             methods.append(self._function("method"))
 
         self.consume(TokenType.RIGHT_BRACE, "Expect '}' after class body")
-        print(methods)
         return Class(name, None, methods)
     def _function(self, kind: str) -> Function:
         name = self.consume(TokenType.IDENTIFIER, f"Expected {kind} name")

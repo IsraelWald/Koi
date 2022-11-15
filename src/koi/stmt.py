@@ -67,7 +67,10 @@ class Block(Stmt):
 
 class Class(Stmt):
     def __init__(
-        self, name: Token, superclass: Optional[Variable], methods: List[Function]
+        self,
+        name: Token,
+        methods: List[Function],
+        superclass: Optional[Variable] = None,
     ):
         self.name = name
         self.superclass = superclass
