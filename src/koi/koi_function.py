@@ -6,9 +6,10 @@ from typing import List
 
 
 class KoiFunction(KoiCallable):
-    def __init__(self, declaration: Function, closure: Environment) -> None:
+    def __init__(self, declaration: Function, closure: Environment, is_initializer: bool) -> None:
         self.decl = declaration
         self.closure = closure
+        self.is_initializer = is_initializer
 
     def call(self, interpreter, args: List):
         env = Environment(self.closure)
@@ -18,6 +19,8 @@ class KoiFunction(KoiCallable):
             interpreter._exec_block(self.decl.body, env)
         except KoiReturnException as return_value:
             return return_value.value
+        if self.is_initializer:
+            return self.closure.get_at(0, "this")
         return None
 
     def arity(self) -> int:

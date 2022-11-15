@@ -1,5 +1,6 @@
 from .koi_callable import KoiCallable
 from .koi_instance import KoiInstance
+from .koi_function import KoiFunction
 
 from typing import List, Dict, Any
 
@@ -20,7 +21,13 @@ class KoiClass(KoiCallable):
 
     def call(self, interpreter, args: List):
         instance = KoiInstance(self)
+        initializer: KoiFunction = self.find_method("init")
+        if initializer is not None:
+            initializer.bind(instance).call(interpreter, args)
         return instance
 
     def arity(self) -> int:
+        initializer: KoiFunction = self.find_method("init")
+        if initializer:
+            return initializer.arity()
         return 0
