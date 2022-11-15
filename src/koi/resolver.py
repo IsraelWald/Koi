@@ -178,7 +178,8 @@ class Resolver(ExprVisitor, StmtVisitor):
         self._resolve_expression(expr.obj)
 
     def visit_this_expr(self, expr: This):
-        return super().visit_this_expr(expr)
+        self._resolve_local(expr, expr.keyword)
+        return None
 
     def visit_super_expr(self, expr: Super):
         return super().visit_super_expr(expr)
@@ -187,9 +188,14 @@ class Resolver(ExprVisitor, StmtVisitor):
         self._declare(stmt.name)
         self._define(stmt.name)
 
+        self._begin_scope()
+        self.scopes[-1]["this"] = True
+
         for method in stmt.methods:
             decl = FunctionType.METHOD
             self._resolve_function(method, decl)
+
+        self._end_scope()
 
     def visit_get_expr(self, expr: Get):
         self._resolve_expression(expr.obj)
