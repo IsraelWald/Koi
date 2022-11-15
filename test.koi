@@ -1,5 +1,6 @@
 class Person {
    whoami(name) {
+      this.name;
       print "I am " + name;
    }
 }
