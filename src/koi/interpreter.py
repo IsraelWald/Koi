@@ -1,4 +1,4 @@
-from koi_instance import KoiInstance
+from .koi_instance import KoiInstance
 from .token import Token
 from .std import Clock, Input
 from .environment import Environment

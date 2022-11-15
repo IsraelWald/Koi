@@ -25,7 +25,7 @@ class KoiFunction(KoiCallable):
 
     def bind(self, instance):
         env = Environment(self.closure)
-        env["this"] = instance
+        env.define("this", instance)
         return KoiFunction(self.decl, env)
 
     def __repr__(self) -> str:
