@@ -23,5 +23,10 @@ class KoiFunction(KoiCallable):
     def arity(self) -> int:
         return len(self.decl.params)
 
+    def bind(self, instance):
+        env = Environment(self.closure)
+        env["this"] = instance
+        return KoiFunction(self.decl, env)
+
     def __repr__(self) -> str:
         return f"<function {self.decl.name.lexeme}>"
