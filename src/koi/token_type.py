@@ -42,6 +42,7 @@ class TokenType(enum.Enum):
     CLASS = enum.auto()
     TRUE = enum.auto()
     FALSE = enum.auto()
+    INHERITS = enum.auto()
     NIL = enum.auto()
     FUNC = enum.auto()
     FOR = enum.auto()
