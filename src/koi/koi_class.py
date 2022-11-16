@@ -3,12 +3,14 @@ from .koi_instance import KoiInstance
 from .koi_function import KoiFunction
 
 from typing import List, Dict, Any
+from typing_extensions import Self
 
 
 class KoiClass(KoiCallable):
-    def __init__(self, name, methods: Dict[str, Any]) -> None:
+    def __init__(self, name, superclass: Self, methods: Dict[str, Any]) -> None:
         self.name = name
         self.methods = methods
+        self.superclass = superclass
 
     def find_method(self, name: str):
         try:

@@ -224,12 +224,17 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return None
 
     def visit_class_stmt(self, stmt: Class):
+        superclass = None
+        if stmt.superclass is not None:
+            superclass = self._evaluate(stmt.superclass)
+            if not isinstance(superclass, KoiClass):
+                raise KoiRuntimeError(stmt.superclass.name, "Superclass must a class")
         self.env.define(stmt.name.lexeme, None)
         methods = {}
         for method in stmt.methods:
             fn = KoiFunction(method, self.env, method.name.lexeme == "init")
             methods[method.name.lexeme] = fn
-        klass: KoiClass = KoiClass(stmt.name.lexeme, methods)
+        klass: KoiClass = KoiClass(stmt.name.lexeme, superclass, methods)
         self.env.assign(stmt.name, klass)
 
     def visit_super_expr(self, expr: Super):

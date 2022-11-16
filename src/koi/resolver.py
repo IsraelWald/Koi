@@ -1,7 +1,7 @@
 from collections import deque
 from typing import Deque, Dict
 
-from src.koi.interpreter import Interpreter
+from .interpreter import Interpreter
 
 from .token import Token
 from .expr import (
@@ -194,6 +194,11 @@ class Resolver(ExprVisitor, StmtVisitor):
 
         self._declare(stmt.name)
         self._define(stmt.name)
+
+        if stmt.superclass is not None:
+            if stmt.name.lexeme == stmt.superclass.name.lexeme:
+                self.on_error(stmt.name, "A class cannot inherit from itself")
+            self._resolve_expression(stmt.superclass)
 
         self._begin_scope()
         self.scopes[-1]["this"] = True

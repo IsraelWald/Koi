@@ -56,6 +56,11 @@ class Parser:
         name: Token = self.consume(
             TokenType.IDENTIFIER, "Expected valid identifier in class declaration"
         )
+        superclass = None
+        if self.match(TokenType.LESS):
+            self.consume(TokenType.IDENTIFIER, "Expected valid identifier in superclass name")
+            superclass = Variable(self.previous())
+
         self.consume(TokenType.LEFT_BRACE, "Expected block after class declaration")
 
         methods: List[Function] = []
@@ -63,7 +68,7 @@ class Parser:
             methods.append(self._function("method"))
 
         self.consume(TokenType.RIGHT_BRACE, "Expect '}' after class body")
-        return Class(name, methods)
+        return Class(name, methods, superclass)
 
     def _function(self, kind: str) -> Function:
         name = self.consume(TokenType.IDENTIFIER, f"Expected {kind} name")
