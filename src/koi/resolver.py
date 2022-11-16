@@ -198,6 +198,8 @@ class Resolver(ExprVisitor, StmtVisitor):
 
         for method in stmt.methods:
             decl = FunctionType.METHOD
+            if method.name.lexeme == "init":
+                decl = FunctionType.INITIALIZER
             self._resolve_function(method, decl)
 
         self._end_scope()

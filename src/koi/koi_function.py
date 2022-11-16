@@ -20,6 +20,8 @@ class KoiFunction(KoiCallable):
         try:
             interpreter._exec_block(self.decl.body, env)
         except KoiReturnException as return_value:
+            if self.is_initializer:
+                return self.closure.get_at(0, "this")
             return return_value.value
         if self.is_initializer:
             return self.closure.get_at(0, "this")
