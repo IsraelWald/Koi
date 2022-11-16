@@ -15,7 +15,6 @@ from .expr import (
     Variable,
     Assign,
 )
-# https://craftinginterpreters.com/inheritance.html#semantics
 from .stmt import Expression, Function, Stmt, Var, Block, If, While, Return, Class
 from .token_type import TokenType
 from .token import Token

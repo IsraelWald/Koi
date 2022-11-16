@@ -303,7 +303,6 @@ class Interpreter(ExprVisitor, StmtVisitor):
 
     def resolve(self, expr: Expr, depth: int):
         self.locals[expr] = depth
-        # https://craftinginterpreters.com/resolving-and-binding.html#accessing-a-resolved-variable
 
     def _lookup_variable(self, name: Token, expr: Variable):
         distance = self.locals.get(expr)
