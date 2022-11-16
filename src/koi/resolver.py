@@ -186,7 +186,7 @@ class Resolver(ExprVisitor, StmtVisitor):
         return None
 
     def visit_super_expr(self, expr: Super):
-        return super().visit_super_expr(expr)
+        self._resolve_local(expr, expr.keyword)
 
     def visit_class_stmt(self, stmt: Class):
         enclosing_class = self.current_class
@@ -199,6 +199,10 @@ class Resolver(ExprVisitor, StmtVisitor):
             if stmt.name.lexeme == stmt.superclass.name.lexeme:
                 self.on_error(stmt.name, "A class cannot inherit from itself")
             self._resolve_expression(stmt.superclass)
+        
+        if stmt.superclass is not None:
+            self._begin_scope()
+            self.scopes[-1]["super"] = True
 
         self._begin_scope()
         self.scopes[-1]["this"] = True
@@ -210,7 +214,9 @@ class Resolver(ExprVisitor, StmtVisitor):
             self._resolve_function(method, decl)
 
         self._end_scope()
-
+        if stmt.superclass is not None:
+            self._end_scope()
+        
         self.current_class = enclosing_class
 
     def visit_get_expr(self, expr: Get):

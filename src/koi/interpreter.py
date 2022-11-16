@@ -229,11 +229,13 @@ class Interpreter(ExprVisitor, StmtVisitor):
             superclass = self._evaluate(stmt.superclass)
             if not isinstance(superclass, KoiClass):
                 raise KoiRuntimeError(stmt.superclass.name, "Superclass must a class")
+        
         self.env.define(stmt.name.lexeme, None)
         methods = {}
         for method in stmt.methods:
             fn = KoiFunction(method, self.env, method.name.lexeme == "init")
             methods[method.name.lexeme] = fn
+        
         klass: KoiClass = KoiClass(stmt.name.lexeme, superclass, methods)
         self.env.assign(stmt.name, klass)
 
