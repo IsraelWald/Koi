@@ -7,6 +7,7 @@ from .expr import (
     Grouping,
     Literal,
     Logical,
+    Super,
     This,
     Set,
     Unary,
@@ -14,6 +15,7 @@ from .expr import (
     Variable,
     Assign,
 )
+# https://craftinginterpreters.com/inheritance.html#semantics
 from .stmt import Expression, Function, Stmt, Var, Block, If, While, Return, Class
 from .token_type import TokenType
 from .token import Token
@@ -328,6 +330,13 @@ class Parser:
             return Literal(self.previous().literal)
         elif self.match(TokenType.THIS):
             return This(self.previous())
+        elif self.match(TokenType.SUPER):
+            keyword = self.previous()
+            self.consume(TokenType.DOT, "Expected '.' after super")
+            method = self.consume(
+                TokenType.IDENTIFIER, "Expected superclass method name after '.'"
+            )
+            return Super(keyword, method)
         elif self.match(TokenType.LEFT_PAREN):
             expr = self._equality()
             self.consume(TokenType.RIGHT_PAREN, "Expected ')' after expression")
