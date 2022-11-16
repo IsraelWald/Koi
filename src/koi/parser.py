@@ -58,7 +58,9 @@ class Parser:
         )
         superclass = None
         if self.match(TokenType.LESS):
-            self.consume(TokenType.IDENTIFIER, "Expected valid identifier in superclass name")
+            self.consume(
+                TokenType.IDENTIFIER, "Expected valid identifier in superclass name"
+            )
             superclass = Variable(self.previous())
 
         self.consume(TokenType.LEFT_BRACE, "Expected block after class declaration")
