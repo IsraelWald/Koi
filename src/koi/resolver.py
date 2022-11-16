@@ -55,6 +55,8 @@ class Resolver(ExprVisitor, StmtVisitor):
         self._resolve_stmts(stmts)
 
     def _resolve_stmts(self, stmts):
+        if not isinstance(stmts, list):
+            stmts = [stmts]
         for stmt in stmts:
             self._resolve_stmt(stmt)
 
