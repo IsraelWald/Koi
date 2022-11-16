@@ -227,7 +227,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
         self.env.define(stmt.name.lexeme, None)
         methods = {}
         for method in stmt.methods:
-            fn = KoiFunction(method, self.env)
+            fn = KoiFunction(method, self.env, method.name.lexeme == "init")
             methods[method.name.lexeme] = fn
         klass: KoiClass = KoiClass(stmt.name.lexeme, methods)
         self.env.assign(stmt.name, klass)
@@ -242,7 +242,7 @@ class Interpreter(ExprVisitor, StmtVisitor):
         return self._lookup_variable(expr.name, expr)
 
     def visit_function_stmt(self, stmt: Function):
-        fn = KoiFunction(stmt, self.env)
+        fn = KoiFunction(stmt, self.env, False)
         self.env.define(stmt.name.lexeme, fn)
         return None
 

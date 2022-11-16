@@ -1,11 +1,11 @@
-var start = clock();
 class Person {
+   init() {
+      this.name = input("What is person's name? ");
+   }
    whoami() {
       print "I am " + this.name;
    }
 }
 
 var dave = Person();
-dave.name = "Dave";
 dave.whoami();
-print clock() - start;

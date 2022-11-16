@@ -188,7 +188,7 @@ class Resolver(ExprVisitor, StmtVisitor):
 
     def visit_class_stmt(self, stmt: Class):
         enclosing_class = self.current_class
-        current_class = ClassType.CLASS
+        self.current_class = ClassType.CLASS
 
         self._declare(stmt.name)
         self._define(stmt.name)

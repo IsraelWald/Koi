@@ -6,7 +6,9 @@ from typing import List
 
 
 class KoiFunction(KoiCallable):
-    def __init__(self, declaration: Function, closure: Environment, is_initializer: bool) -> None:
+    def __init__(
+        self, declaration: Function, closure: Environment, is_initializer: bool
+    ) -> None:
         self.decl = declaration
         self.closure = closure
         self.is_initializer = is_initializer
@@ -29,7 +31,7 @@ class KoiFunction(KoiCallable):
     def bind(self, instance):
         env = Environment(self.closure)
         env.define("this", instance)
-        return KoiFunction(self.decl, env)
+        return KoiFunction(self.decl, env, self.is_initializer)
 
     def __repr__(self) -> str:
         return f"<function {self.decl.name.lexeme}>"
