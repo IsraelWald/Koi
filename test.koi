@@ -1,11 +1,14 @@
-class Person {
-   init() {
-      this.name = input("What is person's name? ");
-   }
-   whoami() {
-      print "I am " + this.name;
+class Vehicle {
+   drive() {
+      print "Vroom";
    }
 }
 
-var dave = Person();
-dave.whoami();
+class Car < Vehicle{
+   init() {
+      this.num_wheels = 3;
+   }
+}
+
+var c = Car();
+c.drive();

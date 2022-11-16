@@ -16,6 +16,8 @@ class KoiClass(KoiCallable):
         try:
             return self.methods[name]
         except KeyError:
+            if self.superclass:
+                return self.superclass.find_method(name)
             return None
 
     def __repr__(self) -> str:
