@@ -72,3 +72,13 @@ class List {
         }
     }
 }
+
+fun printItem(item) {
+    print item;
+}
+
+var l = List();
+l.append("Bill");
+l.append("Will");
+l.append("Hill");
+l.forEach(printItem);
