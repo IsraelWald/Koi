@@ -1,3 +1,5 @@
 from . import Koi
 
-Koi.main()
+
+def main():
+    Koi.main()
