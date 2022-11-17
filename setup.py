@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="Koi",
-    version="1.0.0",
+    version="1.1.1",
     description="Koi Language",
     author="Israel Waldner",
     author_email="imky171@gmail.com",
