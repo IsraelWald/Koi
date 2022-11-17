@@ -8,6 +8,10 @@ class Car < Vehicle{
    init() {
       this.num_wheels = 3;
    }
+   drive() {
+      super.drive();
+      print "Car goes forward";
+   }
 }
 
 var c = Car();

@@ -229,18 +229,32 @@ class Interpreter(ExprVisitor, StmtVisitor):
             superclass = self._evaluate(stmt.superclass)
             if not isinstance(superclass, KoiClass):
                 raise KoiRuntimeError(stmt.superclass.name, "Superclass must a class")
-        
+
         self.env.define(stmt.name.lexeme, None)
+        if stmt.superclass is not None:
+            self.env = Environment(self.env)
+            self.env.define("super", superclass)
+
         methods = {}
         for method in stmt.methods:
             fn = KoiFunction(method, self.env, method.name.lexeme == "init")
             methods[method.name.lexeme] = fn
-        
+
         klass: KoiClass = KoiClass(stmt.name.lexeme, superclass, methods)
+        if superclass is not None:
+            self.env = self.env.parent
         self.env.assign(stmt.name, klass)
 
     def visit_super_expr(self, expr: Super):
-        return super().visit_super_expr(expr)
+        dist = self.locals.get(expr)
+        superclass: KoiClass = self.env.get_at(dist, "super")
+        this: KoiInstance = self.env.get_at(dist - 1, "this")
+        method: KoiFunction = superclass.find_method(expr.method.lexeme)
+        if method is None:
+            raise KoiRuntimeError(
+                expr.method, f"Undefined property {expr.method.lexeme!r}"
+            )
+        return method.bind(this)
 
     def visit_this_expr(self, expr: This):
         return self._lookup_variable(expr.keyword, expr)

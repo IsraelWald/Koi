@@ -186,6 +186,13 @@ class Resolver(ExprVisitor, StmtVisitor):
         return None
 
     def visit_super_expr(self, expr: Super):
+        if self.current_class == ClassType.NONE:
+            self.on_error(expr.keyword, "Cannot use 'super' outside a class")
+        elif self.current_class != ClassType.SUBCLASS:
+            self.on_error(
+                expr.keyword, "Cannot use 'super' in a class with no superclass"
+            )
+
         self._resolve_local(expr, expr.keyword)
 
     def visit_class_stmt(self, stmt: Class):
@@ -198,8 +205,9 @@ class Resolver(ExprVisitor, StmtVisitor):
         if stmt.superclass is not None:
             if stmt.name.lexeme == stmt.superclass.name.lexeme:
                 self.on_error(stmt.name, "A class cannot inherit from itself")
+            self.current_class = ClassType.SUBCLASS
             self._resolve_expression(stmt.superclass)
-        
+
         if stmt.superclass is not None:
             self._begin_scope()
             self.scopes[-1]["super"] = True
@@ -216,7 +224,7 @@ class Resolver(ExprVisitor, StmtVisitor):
         self._end_scope()
         if stmt.superclass is not None:
             self._end_scope()
-        
+
         self.current_class = enclosing_class
 
     def visit_get_expr(self, expr: Get):
