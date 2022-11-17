@@ -1,0 +1,12 @@
+class Human {
+    init(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+    greet() {
+        print "Hello, " + this.name;
+    }
+}
+
+var bob = Human("Bob", 33);
+bob.greet();
