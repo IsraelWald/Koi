@@ -1,6 +1,6 @@
 from .koi_instance import KoiInstance
 from .token import Token
-from .std import Clock, Input
+from .std import Clock, Input, ReadFile, WriteFile
 from .environment import Environment
 from .koi_callable import KoiCallable
 from .koi_class import KoiClass
@@ -49,6 +49,8 @@ class Interpreter(ExprVisitor, StmtVisitor):
 
         self.globals.define("clock", Clock())
         self.globals.define("input", Input())
+        self.globals.define("read_file", ReadFile())
+        self.globals.define("write_file", WriteFile())
 
     def interpret(self, statements: List[Stmt]):
         try:

@@ -1,6 +1,5 @@
 from ..koi_callable import KoiCallable
 from typing import List
-import time
 
 
 class Input(KoiCallable):
