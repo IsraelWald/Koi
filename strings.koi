@@ -1,0 +1,5 @@
+print "Hello".length();
+print "Hello".at(4);
+var a = "Hello";
+a.alter(3, "b"); // In-place operation
+print a;
