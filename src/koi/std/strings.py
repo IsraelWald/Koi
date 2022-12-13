@@ -59,7 +59,7 @@ class StringInstance(KoiInstance):
                     return "<native string method 'alter'>"
 
             return Alter()
-        elif name.lexeme == "length":
+        elif name.lexeme == "len":
 
             class Length(KoiCallable):
                 def arity(self) -> int:
@@ -69,7 +69,7 @@ class StringInstance(KoiInstance):
                     return len(elements)
 
                 def __repr__(self) -> str:
-                    return "<native string method 'length'>"
+                    return "<native string method 'len'>"
 
             return Length()
         elif name.lexeme == "split":
