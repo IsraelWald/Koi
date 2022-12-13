@@ -1,8 +1,16 @@
-from .types import StringType, TypeVisitor
+from .types import TypeVisitor
 from .koi_instance import KoiInstance
 from .tokens import Token
-from .std import Clock, Input, ReadFile, WriteFile, StringDataType
-from .std.strings import StringInstance
+from .std import (
+    Clock,
+    Input,
+    ReadFile,
+    WriteFile,
+    StringDataType,
+    StringInstance,
+    Println,
+    Print,
+)
 from .environment import Environment
 from .koi_callable import KoiCallable
 from .koi_class import KoiClass
@@ -53,6 +61,8 @@ class Interpreter(ExprVisitor, StmtVisitor, TypeVisitor):
         self.globals.define("read_file", ReadFile())
         self.globals.define("write_file", WriteFile())
         self.globals.define("string", StringDataType())
+        self.globals.define("print", Print())
+        self.globals.define("println", Println())
 
     def interpret(self, statements: List[Stmt]):
         try:
