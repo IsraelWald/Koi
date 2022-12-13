@@ -11,8 +11,10 @@ class StringInstance(KoiInstance):
     def __init__(self, elements: str) -> None:
         super().__init__(KoiClass("String", None, {}))
         self.elements = list(str(elements))
+        self.value = elements
 
     def get(self, name: Token):
+        value = self.value
         elements = self.elements
         if name.lexeme == "at":
 
@@ -57,7 +59,7 @@ class StringInstance(KoiInstance):
                     return "<native string method 'alter'>"
 
             return Alter()
-        elif name.lexeme == "length":
+        elif name.lexeme == "len":
 
             class Length(KoiCallable):
                 def arity(self) -> int:
@@ -67,9 +69,24 @@ class StringInstance(KoiInstance):
                     return len(elements)
 
                 def __repr__(self) -> str:
-                    return "<native string method 'length'>"
+                    return "<native string method 'len'>"
 
             return Length()
+        elif name.lexeme == "split":
+
+            class Split(KoiCallable):
+                def arity(self) -> int:
+                    return 1
+
+                def call(self, interpreter, args: List):
+                    if args[0].value == "":
+                        return "".join(elements).split()
+                    return "".join(elements).split(args[0].value)
+
+                def __repr__(self) -> str:
+                    return "<native string method split>"
+
+            return Split()
         else:
             raise KoiRuntimeError(name, f"Can't call {name.lexeme!r} on a string")
 

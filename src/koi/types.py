@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from abc import abstractmethod, ABC
-from typing import Any, List
-from .tokens import Token
 
 
 class TypeVisitor(ABC):
