@@ -1,6 +1,8 @@
+from .types import StringType, TypeVisitor
 from .koi_instance import KoiInstance
 from .tokens import Token
 from .std import Clock, Input, ReadFile, WriteFile, StringDataType
+from .std.strings import StringInstance
 from .environment import Environment
 from .koi_callable import KoiCallable
 from .koi_class import KoiClass
@@ -41,7 +43,7 @@ from .koi_runtime_error import KoiRuntimeError
 from typing import List, Dict, Any
 
 
-class Interpreter(ExprVisitor, StmtVisitor):
+class Interpreter(ExprVisitor, StmtVisitor, TypeVisitor):
     def __init__(self) -> None:
         self.globals = Environment()
         self.env = self.globals
@@ -86,6 +88,9 @@ class Interpreter(ExprVisitor, StmtVisitor):
 
     def visit_literal_expr(self, expr: Literal):
         return expr.value
+
+    def visit_string_type(self, string: str):
+        return StringInstance(string)
 
     def visit_grouping_expr(self, expr: Grouping):
         return self._evaluate(expr.expression)

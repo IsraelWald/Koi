@@ -1,6 +1,8 @@
 from collections import deque
 from typing import Deque, Dict
 
+from .types import StringType
+
 from .interpreter import Interpreter
 
 from .tokens import Token
@@ -166,6 +168,9 @@ class Resolver(ExprVisitor, StmtVisitor):
         self._resolve_expression(expr.expression)
 
     def visit_literal_expr(self, expr: Literal):
+        return None
+
+    def visit_string_type(self, string: StringType):
         return None
 
     def visit_logical_expr(self, expr: Logical):

@@ -15,10 +15,21 @@ from .expr import (
     Variable,
     Assign,
 )
-from .stmt import Expression, Function, Stmt, Var, Block, If, While, Return, Class
+from .stmt import (
+    Expression,
+    Function,
+    Stmt,
+    Var,
+    Block,
+    If,
+    While,
+    Return,
+    Class,
+    Print,
+)
 from .token_type import TokenType
 from .tokens import Token
-from .stmt import Print
+from .types import StringType
 
 
 class ParseError(Exception):
@@ -325,8 +336,10 @@ class Parser:
             return Literal(None)
         elif self.match(TokenType.IDENTIFIER):
             return Variable(self.previous())
-        elif self.match(TokenType.NUMBER, TokenType.STRING):
+        elif self.match(TokenType.NUMBER):
             return Literal(self.previous().literal)
+        elif self.match(TokenType.STRING):
+            return StringType(self.previous().literal)
         elif self.match(TokenType.THIS):
             return This(self.previous())
         elif self.match(TokenType.SUPER):
