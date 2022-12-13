@@ -22,7 +22,6 @@ class Scanner:
         "fun": TokenType.FUNC,
         "for": TokenType.FOR,
         "while": TokenType.WHILE,
-        "print": TokenType.PRINT,
         "return": TokenType.RETURN,
         "super": TokenType.SUPER,
         "this": TokenType.THIS,

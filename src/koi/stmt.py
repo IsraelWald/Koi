@@ -34,10 +34,6 @@ class StmtVisitor(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def visit_print_stmt(self, stmt: Print):
-        raise NotImplementedError
-
-    @abstractmethod
     def visit_return_stmt(self, stmt: Return):
         raise NotImplementedError
 
@@ -110,15 +106,6 @@ class If(Stmt):
     def accept(self, visitor: StmtVisitor):
         """Create an accept method that calls the visitor"""
         return visitor.visit_if_stmt(self)
-
-
-class Print(Stmt):
-    def __init__(self, expression: Expr):
-        self.expression = expression
-
-    def accept(self, visitor: StmtVisitor):
-        """Create an accept method that calls the visitor"""
-        return visitor.visit_print_stmt(self)
 
 
 class Return(Stmt):

@@ -29,7 +29,6 @@ from .stmt import (
     Expression,
     Function,
     If,
-    Print,
     Return,
     StmtVisitor,
     Stmt,
@@ -154,11 +153,6 @@ class Interpreter(ExprVisitor, StmtVisitor, TypeVisitor):
 
     def visit_expression_stmt(self, stmt: Expression):
         self._stringify(self._evaluate(stmt.expression))
-        return None
-
-    def visit_print_stmt(self, stmt: Print):
-        value = self._evaluate(stmt.expression)
-        print(self._stringify(value))
         return None
 
     def _evaluate(self, expr: Expr):

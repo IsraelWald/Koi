@@ -46,7 +46,6 @@ class TokenType(enum.Enum):
     FUNC = enum.auto()
     FOR = enum.auto()
     WHILE = enum.auto()
-    PRINT = enum.auto()
     RETURN = enum.auto()
     SUPER = enum.auto()
     THIS = enum.auto()

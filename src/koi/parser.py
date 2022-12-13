@@ -25,7 +25,6 @@ from .stmt import (
     While,
     Return,
     Class,
-    Print,
 )
 from .token_type import TokenType
 from .tokens import Token
@@ -116,8 +115,6 @@ class Parser:
         return Var(name, init_val)
 
     def _statement(self) -> Stmt:
-        if self.match(TokenType.PRINT):
-            return self._print_statement()
         if self.match(TokenType.IF):
             return self._if_statement()
         if self.match(TokenType.LEFT_BRACE):
@@ -200,11 +197,6 @@ class Parser:
             statements.append(self._declaration())
         self.consume(TokenType.RIGHT_BRACE, "Expect '}' after block")
         return statements
-
-    def _print_statement(self) -> Stmt:
-        value = self._expression()
-        self.consume(TokenType.SEMICOLON, "Expect ';' after value")
-        return Print(value)
 
     def _expression_statement(self) -> Stmt:
         expr = self._expression()
@@ -398,6 +390,6 @@ class Parser:
             if self.previous().tok_type == TokenType.SEMICOLON:
                 return
             match self.peek().tok_type:
-                case TokenType.CLASS | TokenType.FUNC | TokenType.VAR | TokenType.FOR | TokenType.IF | TokenType.WHILE | TokenType.PRINT | TokenType.RETURN:
+                case TokenType.CLASS | TokenType.FUNC | TokenType.VAR | TokenType.FOR | TokenType.IF | TokenType.WHILE | TokenType.RETURN:
                     return
             self.advance()

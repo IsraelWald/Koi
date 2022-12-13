@@ -27,7 +27,6 @@ from .stmt import (
     Class,
     Function,
     If,
-    Print,
     Return,
     Stmt,
     StmtVisitor,
@@ -139,9 +138,6 @@ class Resolver(ExprVisitor, StmtVisitor):
         self._resolve_stmt(stmt.then_branch)
         if stmt.else_branch:
             self.resolve(stmt.else_branch)
-
-    def visit_print_stmt(self, stmt: Print):
-        self._resolve_expression(stmt.expression)
 
     def visit_return_stmt(self, stmt: Return):
         if self.current_function == FunctionType.NONE:
