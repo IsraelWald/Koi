@@ -21,7 +21,7 @@ class Koi:
 
         parser = Parser(tokens, on_error=self.token_error)
         statements = parser.parse()
-        print(statements)
+
         if self.had_error:
             print("Had error")
             return
