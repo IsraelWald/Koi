@@ -1,5 +1,5 @@
 from typing import Any
-from .token import Token
+from .tokens import Token
 from .koi_runtime_error import KoiRuntimeError
 
 

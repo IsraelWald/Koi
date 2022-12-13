@@ -17,7 +17,7 @@ from .expr import (
 )
 from .stmt import Expression, Function, Stmt, Var, Block, If, While, Return, Class
 from .token_type import TokenType
-from .token import Token
+from .tokens import Token
 from .stmt import Print
 
 

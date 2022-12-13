@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from typing import List, Optional
 
 from .expr import Expr, Variable
-from .token import Token
+from .tokens import Token
 
 
 class StmtVisitor(ABC):

@@ -1,5 +1,5 @@
 from .koi_instance import KoiInstance
-from .token import Token
+from .tokens import Token
 from .std import Clock, Input, ReadFile, WriteFile, StringDataType
 from .environment import Environment
 from .koi_callable import KoiCallable

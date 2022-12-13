@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional
 
 from typing_extensions import Self
 
-from .token import Token
+from .tokens import Token
 from .koi_runtime_error import KoiRuntimeError
 
 

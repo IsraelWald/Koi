@@ -3,7 +3,7 @@ from typing import Deque, Dict
 
 from .interpreter import Interpreter
 
-from .token import Token
+from .tokens import Token
 from .expr import (
     Assign,
     Binary,

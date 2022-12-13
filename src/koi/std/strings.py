@@ -3,7 +3,7 @@ from ..koi_class import KoiClass
 from ..koi_instance import KoiInstance
 from ..koi_runtime_error import KoiRuntimeError
 from typing import List
-from ..token import Token
+from ..tokens import Token
 from .numerable import is_numerable
 
 
