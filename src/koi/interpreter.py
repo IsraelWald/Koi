@@ -1,4 +1,4 @@
-from .types import TypeVisitor
+from .types import TypeVisitor  # type: ignore
 from .koi_instance import KoiInstance
 from .tokens import Token
 from .std import (
@@ -128,7 +128,7 @@ class Interpreter(ExprVisitor, StmtVisitor, TypeVisitor):
             case TokenType.PLUS:
                 if isinstance(left, (int, float)) and isinstance(right, (int, float)):
                     return float(left) + float(right)
-                elif isinstance(left, str):
+                elif isinstance(left, str) or isinstance(left, StringInstance):
                     return str(left) + str(right)
                 else:
                     raise KoiRuntimeError(

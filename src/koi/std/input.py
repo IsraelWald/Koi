@@ -1,4 +1,5 @@
 from ..koi_callable import KoiCallable
+from .strings import StringInstance
 from typing import List
 
 
@@ -7,7 +8,7 @@ class Input(KoiCallable):
         return 1
 
     def call(self, interpreter, args: List):
-        return input(args[0])
+        return StringInstance(input(args[0]))
 
     def __repr__(self) -> str:
         return "<native function input(prompt)>"

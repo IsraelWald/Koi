@@ -4,7 +4,7 @@ class Vehicle {
    }
 }
 
-class Car < Vehicle{
+class Car < Vehicle {
    init() {
       this.num_wheels = 3;
    }
