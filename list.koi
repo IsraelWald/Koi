@@ -74,7 +74,7 @@ class List {
 }
 
 fun printItem(item) {
-    print item;
+    println(item);
 }
 
 var l = List();

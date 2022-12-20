@@ -7,7 +7,7 @@ class Print(KoiCallable):
         return 1
 
     def call(self, interpreter, args: List):
-        print(self.stringify(args[0]), end="")
+        print(self._stringify(args[0]), end="")
 
     def _stringify(self, value):
         if value is None:
@@ -29,7 +29,7 @@ class Println(KoiCallable):
         return 1
 
     def call(self, interpreter, args: List):
-        print(self.stringify(args[0]))
+        print(self._stringify(args[0]))
 
     def _stringify(self, value):
         if value is None:

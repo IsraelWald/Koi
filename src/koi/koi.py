@@ -3,7 +3,7 @@ import sys
 from .tokens import Token
 from .token_type import TokenType
 from .scanner import Scanner
-from .parser import Parser
+from .parser import Parser  # type: ignore
 from .koi_runtime_error import KoiRuntimeError
 from .interpreter import Interpreter
 from .resolver import Resolver
