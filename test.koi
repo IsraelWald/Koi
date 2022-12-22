@@ -1,6 +1,6 @@
 class Vehicle {
    drive() {
-      print "Vroom";
+      println("Vroom");
    }
 }
 
@@ -10,7 +10,7 @@ class Car < Vehicle {
    }
    drive() {
       super.drive();
-      print "Car goes forward";
+      println("Car goes forward");
    }
 }
 
