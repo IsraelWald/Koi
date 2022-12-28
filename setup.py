@@ -21,7 +21,6 @@ setup(
         "Programming Language :: Python :: 3.10",
         "License :: OSI Approved :: MIT License",
     ],
-    project_urls = {
-        'Homepage': "https://github.com/IsraelWald/Koi"
-    }
+    project_urls={"Homepage": "https://github.com/IsraelWald/Koi"},
+    install_requires=["typing_extensions"],
 )
