@@ -1,0 +1,12 @@
+fun fibonacci(number) {
+    if (number <= 1) {
+        return number;
+    } else {
+        return fibonacci(number - 1) + fibonacci(number - 2);
+    }
+}
+print("The fibonacci of 28 is: ");
+println(fibonacci(28));
+
+# Ouput: 
+The fibonacci of 28 is: 317811.0
