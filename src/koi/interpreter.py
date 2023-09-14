@@ -10,6 +10,7 @@ from .std import (
     StringInstance,
     Println,
     Print,
+    ToInt,
 )
 from .environment import Environment
 from .koi_callable import KoiCallable
@@ -63,6 +64,7 @@ class Interpreter(ExprVisitor, StmtVisitor, TypeVisitor):
         self.globals.define("string", StringDataType())
         self.globals.define("print", Print())
         self.globals.define("println", Println())
+        self.globals.define("toInt", ToInt())
 
     def interpret(self, statements: List[Stmt]):
         try:
