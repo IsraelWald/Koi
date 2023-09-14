@@ -1,0 +1,13 @@
+fun sigma() {
+    var lowerBound = toInt(input("Lower Bound: "));
+    var upperBound = toInt(input("Upper Bound: "));
+    var total = 0;
+
+    for(var i=lowerBound;i<upperBound + 1;i=i+1) {
+        total = total + i;
+    }
+
+    println("The sigma of " + lowerBound + " to " + upperBound + " is " + total);
+}
+
+sigma();
