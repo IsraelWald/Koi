@@ -6,4 +6,4 @@ fun fibonacci(number) {
     }
 }
 print("The fibonacci of 28 is: ");
-println(fibonacci(3));
+println(fibonacci(28));
